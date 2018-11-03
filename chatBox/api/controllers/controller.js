@@ -1,29 +1,40 @@
 'use strict';
 
-var Models = require('../models/models');  // TODO remove
 var MailsMapper = require('../mappers/mailsMapper');
 var ContactsMapper = require('../mappers/contactsMapper');
-var AttachmentsMapper = require('../mappers/AttachmentsMapper');
+var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var imapProvider  = require('../providers/imap');
 
 // TODO refactoring --> toutes les fonctions qui font appel aux 'modèles' passent dans les mappers
 
 exports.listAllContacts = function(req, res) {
-  Models.Contact.findAll({attributes: ['adress', 'name', 'forename']})
-    .then(contacts => {
-      res.json(contacts);
-    });
+  ContactsMapper.listAllContacts()
+  .then(contacts => {
+    res.json(contacts);
+  })
+  .catch(err => {
+    res.send(err);
+  });
 };
 
-// TODO
 exports.createContact = function(req, res) {
-  console.log("Create a new contact");
+  ContactsMapper.createContactOrNull(req.body)
+  .then(contact => {
+    res.json(contact);
+  })
+  .catch(err => {
+    res.send(err);
+  });
 };
 
 // TODO
 exports.listAllMails = function(req, res) {
-  Models.Mail.findAll().then(mails => {
+  MailsMapper.listAllMails()
+  .then(mails => {
     res.json(mails);
+  })
+  .catch(err => {
+    res.send(err);
   });
 };
 
@@ -34,7 +45,7 @@ exports.sendAnEmail = function(req, res) {
 
 exports.listAllMailsByContact = function(req, res) {
   MailsMapper.listAllMailsByContact(req.params.adress)
-    .then( mails => {
+    .then(mails => {
         res.json(mails);
     }).catch(err => {
       res.send(err);
@@ -56,7 +67,14 @@ exports.listNewMailsByContact = function(req, res) {
   console.log("New emails from " + req.params.adress + " (" + req.params.date + ") " )
 };
 
-
 exports.refreshMails = function(req, res) {
-  imapProvider.getAllMailsSince('May 20, 2010');
+
+  MailsMapper.getLastReceivedMail().then(date => {
+    console.log(date);
+    imapProvider.getAllMailsSince(date).then( mails => {
+      for (mail in mails) {
+        console.log(mail);
+      }
+    });
+  });
 };

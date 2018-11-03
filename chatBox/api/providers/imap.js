@@ -7,8 +7,9 @@ var inspect = require('util').inspect;
 
 var imap = require('../../settings').imap;
 var fs = require('fs'), fileStream;
+var MailsMapper = require('../mappers/mailsMapper');
+
 const simpleParser = require('mailparser').simpleParser;
-impor
 
 imap.once('error', function(err) {
   console.log(err);
@@ -20,6 +21,33 @@ imap.once('end', function() {
 
 function openInbox(cb) {
   imap.openBox('INBOX', true, cb);
+}
+
+function saveMailIntoDatabase(mail) {
+
+  var newMail = {};
+  // TODO extraire le mail
+  var adress  = mail.from.value[0].address;
+  if (adress == "adresse.de.test.785@gmail.com") return;
+  //newMail.to = mail.to.value[0].address;
+  newMail.body = mail.text;
+  newMail.subject = mail.subject;
+  newMail.date = mail.date;
+  newMail.treated = true;
+  newMail.toMe = true;
+  console.log(newMail);
+
+  MailsMapper.addNewMail(adress, newMail); // Faire en sorte d'éviter les doublons
+}
+
+
+function saveMailIntoFile(msg, seqno) {
+  fs.writeFile('mails/msg-' + seqno + '-body.json', JSON.stringify(parsed), function(err) {
+      if(err) {
+          return console.log(err);
+      }
+      console.log("The file was saved!");
+  });
 }
 
 // À sauvegarder dans la base de données
@@ -45,15 +73,11 @@ exports.getAllMailsSince = function(date) {
           msg.on('body', function(stream, info) {
             simpleParser(stream)
               .then(parsed => {
-                fs.writeFile('mails/msg-' + seqno + '-body.json', JSON.stringify(parsed), function(err) {
-                    if(err) {
-                        return console.log(err);
-                    }
-                    console.log("The file was saved!");
-                });
+                saveMailIntoDatabase(parsed);
               })
-              .catch(err => {console.log(err);});
-            //stream.pipe(fs.createWriteStream('mails/msg-' + seqno + '-body.txt'));
+              .catch(err => {
+                console.log(err);
+              });
           });
 
           msg.once('attributes', function(attrs) {
@@ -73,6 +97,6 @@ exports.getAllMailsSince = function(date) {
           imap.end();
         });
       });
-    });0
+    });
     });
   }

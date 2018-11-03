@@ -1,0 +1,38 @@
+'use strict';
+
+var Sequelize = require('sequelize');
+var database = require('../../settings').database;
+var Mail = require('./mailModel').Mail;
+
+var Attachment = database.define("chat_attachments", {
+  contentType: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  data: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  mail: {
+    type: Sequelize.INTEGER,
+    references : {
+      model: Mail,
+      key: 'id'
+    },
+    allowNull: false
+  },
+  size: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  fileName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  checkSum: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  }
+});
+
+exports.Attachment = Attachment;
