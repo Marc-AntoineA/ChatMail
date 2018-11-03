@@ -1,0 +1,5 @@
+*.swp
+settings.js
+node_modules/
+tmp/
+mails/

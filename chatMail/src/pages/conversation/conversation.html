@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-navbar>
+    <h3 *ngIf="sessionData.currentContact"> {{ sessionData.currentContact.vorname }} {{ sessionData.currentContact.name }} </h3>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="messages-container">
+    <div *ngFor="let message of sessionData.listAllCurrentMails()"
+      class="message"
+      [ngClass]="message.toMe ? 'message-received': 'message-sent'">
+      <div class="message-header">
+        {{ message.date }} - {{ message.subject }}
+      </div>
+
+      <div class="message-content">
+        {{ message.body }}
+      </div>
+    </div>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <h4>Écrire ou continuer un message </h4>
+  <!-- TODO le clic sur le bouton fait obligatoirement descendre tout en bas -->
+
+  <ion-textarea
+    placeholder="Appuyer ici pour écrire un nouveau message"
+    [(ngModel)]="currentMail.body">
+  </ion-textarea>
+
+  <!-- TODO en priorité la gestion des deux appareils photos back et front-->
+  <button ion-button icon-start (click)="openCamera()">
+    <ion-icon name="camera"></ion-icon>
+    Ajouter une photo
+  </button>
+
+  <button ion-button icon-start (click)="sendMail()">
+    <ion-icon name="send"></ion-icon>
+    Envoyer le courier
+  </button>
+
+</ion-footer>

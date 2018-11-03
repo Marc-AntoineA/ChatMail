@@ -1,0 +1,28 @@
+<ion-split-pane>
+  <ion-menu [content]="content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>ChatMail</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <!-- TODO Trier les contacts en fonction du dernier mail => updatedDate -->
+        <!-- TODO Compter le nombre de mails non lus et les afficher -->
+        <ion-item *ngFor="let contact of sessionData.listAllContacts()"
+           class="new-messages"
+          (click)='openConversation(contact)'>
+
+          <div class="identity"> {{ contact.vorname }} <span class="name"> {{ contact.name }} </span></div>
+          <div class="email"> {{ contact.adress }} </div>
+          <div class="notification"> XX courriers non lus </div>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+
+  </ion-menu>
+
+  <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+  <ion-nav [root]="messengerPage" main #content></ion-nav>
+</ion-split-pane>

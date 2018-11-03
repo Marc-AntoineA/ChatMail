@@ -1,0 +1,71 @@
+$gray: #b8b8b8;
+$lightgray: #e0e0e0;
+
+page-conversation {
+  font-size: 20px;
+  font-family: Roboto;
+}
+.h3 {
+  margin: 40px 0px;
+}
+.message {
+  max-width: 80%;
+  margin: 0px 7px;
+}
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  background-color: $lightgray;
+  padding: 20px 10px;
+  height: 100%;
+}
+
+.message-content {
+  border: 1px solid black;
+  padding: 5px 10px;
+  margin: 7px 0px;
+  border-color: $gray;
+}
+
+.message-received .message-content {
+    border-radius: 0px 12px 12px 0px;
+    background-color: $gray;
+    padding-right: 10px;
+}
+
+.message-sent .message-content {
+    border-radius: 12px 0px 0px 12px;
+    background-color: $gray;
+    padding-left: 10px;
+}
+
+.message-sent .message-header {
+  text-align: right;
+}
+
+.message-received .message-header {
+  text-align:left;
+}
+
+.message-received {
+  align-self: left;
+}
+
+.message-header {
+
+}
+.message-sent {
+  align-self: right
+}
+
+/* BUG ICI, TODO À CREUSER */
+.image-attachement {
+  max-height: 170px;
+  width: 280px;
+}
+
+.message-header {
+  font-size: 13px;
+  margin-top: 15px;
+}
