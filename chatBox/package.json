@@ -12,6 +12,7 @@
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
     "nodemailer": "^4.6.7",
+    "quoted-printable": "^1.0.1",
     "sequelize": "^4.38.0"
   },
   "devDependencies": {},

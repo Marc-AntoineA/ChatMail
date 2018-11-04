@@ -26,6 +26,7 @@ page-conversation {
   padding: 5px 10px;
   margin: 7px 0px;
   border-color: $gray;
+  white-space: pre-wrap;
 }
 
 .message-received .message-content {
