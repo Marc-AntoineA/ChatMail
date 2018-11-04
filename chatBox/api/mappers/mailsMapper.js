@@ -5,8 +5,8 @@ var Contact = require('../models/contactModel').Contact;
 var ContactsMapper = require('../mappers/contactsMapper');
 
 // Obtenir tous les mails d'une personne
-exports.listAllMailsByContact = function(contactAdress) {
-  return Contact.find({where: { adress: contactAdress }})
+exports.listAllMailsByContact = function(contactAddress) {
+  return Contact.find({where: { address: contactAddress }})
     .then(contact => {
       return Mail.findAll(
         {
@@ -20,8 +20,8 @@ exports.listAllMailsByContact = function(contactAdress) {
 };
 
 // Obtenir tous les mails d'une personne, depuis une certaine date
-exports.listAllMailsByContactSince = function(contactAdress, begin) {
-  return Contact.find( { where: { adress: contactAdress }})
+exports.listAllMailsByContactSince = function(contactAddress, begin) {
+  return Contact.find( { where: { address: contactAddress }})
     .then(contact => {
       return Mail.findAdd()
     });
@@ -49,8 +49,8 @@ exports.getUnTreatedMails = function() {
 
 // Ajouter un mail
 // Mail = object js avec les bonnes structures
-exports.addNewMail = function (contactAdress, mail){
-  ContactsMapper.createContactOrNull({adress: contactAdress}).then(contact => {
+exports.addNewMail = function (contactAddress, mail){
+  ContactsMapper.createContactOrNull({address: contactAddress}).then(contact => {
       mail.recipient = contact.id;
       Mail.create(mail).then( () => {
         console.log("success");
@@ -60,11 +60,11 @@ exports.addNewMail = function (contactAdress, mail){
   });
 };
 
-// TODO s'assurer que pas le premier mail
+// TODO on devrait pouvoir faire ça plus facilement...
 exports.getLastReceivedMail = function () {
   return Mail.findAll({
     where: { toMe: true },
-    order: [['date', 'ASC']]
+    order: [['date', 'DESC']]
   }).then(mails => {
     if (mails.length == 0)
       return new Date('2000, May 20');

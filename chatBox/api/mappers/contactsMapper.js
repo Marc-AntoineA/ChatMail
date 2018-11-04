@@ -3,21 +3,21 @@
 var Contact = require('../models/contactModel').Contact;
 
 exports.listAllContacts = function() {
-  return Contact.findAll({attributes: ['adress', 'name', 'forename']});
+  return Contact.findAll({attributes: ['address', 'name', 'forename']});
 };
 
 exports.getContactById = function(id) {
   return Contact.find({ where: {id: id}});
 };
 
-exports.getContactByAdress = function(contactAdress) {
-  return Contact.find({ where: { adress: contactAdress }});
+exports.getContactByAddress = function(contactAddress) {
+  return Contact.find({ where: { address: contactAddress }});
 };
 
 exports.createContact = function(contact) {
   return Contact.create(contact)
   .then(() => {
-    return getContactByAdress(contact.adress);
+    return exports.getContactByAddress(contact.address);
   })
   .catch(err => {
     throw err;
@@ -25,11 +25,13 @@ exports.createContact = function(contact) {
 };
 
 exports.createContactOrNull = function(contact) {
-  return exports.getContactByAdress(contact.adress).then(
+  return exports.getContactByAddress(contact.address).then(
     results => {
       if (results != null)
         return results;
-      return exports.getContactByAdress(contact.adress).then(results => {
+      console.log(contact);
+      exports.createContact(contact).then(results => {
+        console.log(results);
         return results;
       });
     })

@@ -11,14 +11,14 @@ module.exports = function(app) {
     .get(chatApi.listAllMails)
     .post(chatApi.sendAnEmail);
 
-  app.route('/mails/:adress')
+  app.route('/mails/:address')
     .get(chatApi.listAllMailsByContact)
     .post(chatApi.sendAMailByContact);
 
   app.route('/mails/date/:date')
     .get(chatApi.listNewEmails);
 
-  app.route('/mails/date/:date/:adress')
+  app.route('/mails/date/:date/:address')
     .get(chatApi.listNewMailsByContact);
 
   app.route('/refresh')

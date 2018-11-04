@@ -4,7 +4,7 @@ var Sequelize = require('sequelize');
 var database = require('../../settings').database;
 
 var Contact = database.define('chat_contacts', {
-  adress: {
+  address: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true

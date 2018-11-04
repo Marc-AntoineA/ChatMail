@@ -44,7 +44,7 @@ exports.sendAnEmail = function(req, res) {
 };
 
 exports.listAllMailsByContact = function(req, res) {
-  MailsMapper.listAllMailsByContact(req.params.adress)
+  MailsMapper.listAllMailsByContact(req.params.address)
     .then(mails => {
         res.json(mails);
     }).catch(err => {
@@ -64,17 +64,13 @@ exports.listNewEmails = function(req, res) {
 
 // TODO
 exports.listNewMailsByContact = function(req, res) {
-  console.log("New emails from " + req.params.adress + " (" + req.params.date + ") " )
+  console.log("New emails from " + req.params.address + " (" + req.params.date + ") " )
 };
 
 exports.refreshMails = function(req, res) {
 
   MailsMapper.getLastReceivedMail().then(date => {
     console.log(date);
-    imapProvider.getAllMailsSince(date).then( mails => {
-      for (mail in mails) {
-        console.log(mail);
-      }
-    });
+    imapProvider.getAllMailsSince(date);
   });
 };

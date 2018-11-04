@@ -44,11 +44,11 @@ export class SessionData {
   }
 
   getAllCurrentMails(){
-      console.log("Téléchargement de tous les mails de " + this.currentContact.adress);
+      console.log("Téléchargement de tous les mails de " + this.currentContact.address);
 
       return new Promise(resolve => {
         let url: string;
-        url = this.apiUrl + "/mails/" + this.currentContact.adress;
+        url = this.apiUrl + "/mails/" + this.currentContact.address;
         console.log(url);
         this.http.get(url)
           .subscribe((mails: any) => {

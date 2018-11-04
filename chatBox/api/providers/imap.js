@@ -27,8 +27,8 @@ function saveMailIntoDatabase(mail) {
 
   var newMail = {};
   // TODO extraire le mail
-  var adress  = mail.from.value[0].address;
-  if (adress == "adresse.de.test.785@gmail.com") return;
+  var address  = mail.from.value[0].address;
+  if (address == "addresse.de.test.785@gmail.com") return;
   //newMail.to = mail.to.value[0].address;
   newMail.body = mail.text;
   newMail.subject = mail.subject;
@@ -37,7 +37,7 @@ function saveMailIntoDatabase(mail) {
   newMail.toMe = true;
   console.log(newMail);
 
-  MailsMapper.addNewMail(adress, newMail); // Faire en sorte d'éviter les doublons
+  MailsMapper.addNewMail(address, newMail); // Faire en sorte d'éviter les doublons
 }
 
 
