@@ -24,18 +24,11 @@ exports.createContact = function(contact) {
   });
 };
 
-exports.createContactOrNull = function(contact) {
-  return exports.getContactByAddress(contact.address).then(
-    results => {
-      if (results != null)
-        return results;
-      console.log(contact);
-      exports.createContact(contact).then(results => {
-        console.log(results);
-        return results;
-      });
-    })
-    .catch(err => {
-      throw err;
-    });
+exports.findOrCreate = function(contact) {
+  return Contact.findOrCreate({
+    where: {
+      address: contact.address
+    },
+    defaults: contact
+  });
 };

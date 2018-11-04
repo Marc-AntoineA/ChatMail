@@ -6,5 +6,11 @@ var quotedPrintable = require('quoted-printable');
 var utf8 = require('utf8');
 
 exports.fromQp = function(string) {
-  return utf8.decode(quotedPrintable.decode(string));
+  try {
+    return utf8.decode(quotedPrintable.decode(string));
+  } catch(err) {
+    console.log(err); // TODO manager les erreurs
+    return quotedPrintable.decode(string);
+  }
+
 }

@@ -27,7 +27,6 @@ function openInbox(cb) {
 
 
 function saveMailIntoDatabase(mail) {
-
   var newMail = {};
   // TODO extraire le mail
   var address  = encoding.fromQp(mail.from.value[0].address);
@@ -60,12 +59,13 @@ function saveMailIntoFile(msg, seqno) {
 // --> to.text
 // --> from.text
 
-exports.getAllMailsSince = function(date) {
+exports.getAllMailsSince = function(date, res) {
   imap.connect();
   imap.once('ready', function() {
     openInbox(function(err, box) {
       if (err) throw err;
       imap.search([['SINCE', date]], function(err, results) {
+        var n = 0;
         if (err) throw err;
         var f = imap.fetch(results, { bodies: '' });
 
@@ -76,10 +76,11 @@ exports.getAllMailsSince = function(date) {
 
             simpleParser(stream)
               .then(parsed => {
+                n += 1;
                 saveMailIntoDatabase(parsed);
               })
               .catch(err => {
-                console.log(err);
+                res.send(err);
               });
           });
 
@@ -96,10 +97,10 @@ exports.getAllMailsSince = function(date) {
           console.log('Fetch error: ' + err);
         });
         f.once('end', function() {
-          console.log('Done fetching all messages!');
           imap.end();
+          res.json({n:n});
         });
       });
     });
-    });
-  }
+  });
+}

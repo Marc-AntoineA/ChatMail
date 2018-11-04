@@ -20,7 +20,6 @@ export class SessionData {
     return this.listContacts;
   }
 
-
   getAllContacts(){
     console.log("Téléchargement de tous les contacts disponibles sur le serveur");
     return new Promise(resolve => {
@@ -74,6 +73,21 @@ export class SessionData {
           console.log(mails);
         }, err => {
           // TODO gestion de l'erreur adéquate
+        });
+    });
+  }
+
+  refreshMails() {
+    console.log("Synchronisation des mails sur le serveur");
+    return new Promise(resolve => {
+      let url: string;
+      url = this.apiUrl + "/refresh";
+      console.log(url);
+      this.http.get(url)
+        .subscribe(() => {
+
+        }, err => {
+
         });
     });
   }

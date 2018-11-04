@@ -50,7 +50,9 @@ exports.getUnTreatedMails = function() {
 // Ajouter un mail
 // Mail = object js avec les bonnes structures
 exports.addNewMail = function (contactAddress, mail){
-  ContactsMapper.createContactOrNull({address: contactAddress}).then(contact => {
+  ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
+      console.log(contact);
+      var contact = results[0];
       mail.recipient = contact.id;
       Mail.create(mail).then( () => {
         console.log("success");

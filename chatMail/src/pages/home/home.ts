@@ -23,4 +23,7 @@ export class HomePage {
     this.sessionData.setCurrentContact(contact);
   }
 
+  refreshMails() {
+    this.sessionData.refreshMails();
+  }
 }

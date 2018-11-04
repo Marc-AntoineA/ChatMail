@@ -18,7 +18,7 @@ exports.listAllContacts = function(req, res) {
 };
 
 exports.createContact = function(req, res) {
-  ContactsMapper.createContactOrNull(req.body)
+  ContactsMapper.findOrCreate(req.body)
   .then(contact => {
     res.json(contact);
   })
@@ -64,13 +64,11 @@ exports.listNewEmails = function(req, res) {
 
 // TODO
 exports.listNewMailsByContact = function(req, res) {
-  console.log("New emails from " + req.params.address + " (" + req.params.date + ") " )
+  console.log("New emails from " + req.params.address + " (" + req.params.date + ") " );
 };
 
 exports.refreshMails = function(req, res) {
-
   MailsMapper.getLastReceivedMail().then(date => {
-    console.log(date);
-    imapProvider.getAllMailsSince(date);
+    imapProvider.getAllMailsSince(date, res);
   });
 };

@@ -3,12 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { CameraPage } from '../../pages/camera/camera';
 
 import { SessionData } from '../../providers/session-data';
-/**
- * Generated class for the ConversationPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+
 
 @IonicPage()
 @Component({
