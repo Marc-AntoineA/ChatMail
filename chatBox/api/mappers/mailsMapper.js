@@ -3,6 +3,8 @@
 var Mail = require('../models/mailModel').Mail;
 var Contact = require('../models/contactModel').Contact;
 var ContactsMapper = require('../mappers/contactsMapper');
+var smtp = require('../providers/smtp');
+var settings = require('../../settings');
 
 // Obtenir tous les mails d'une personne
 exports.listAllMailsByContact = function(contactAddress) {
@@ -50,12 +52,13 @@ exports.getUnTreatedMails = function() {
 // Ajouter un mail
 // Mail = object js avec les bonnes structures
 exports.addNewMail = function (contactAddress, mail){
-  ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
+  console.log(contactAddress);
+  return ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
       console.log(contact);
       var contact = results[0];
       mail.recipient = contact.id;
       Mail.create(mail).then( () => {
-        console.log("success");
+        console.log("New email created");
       }).catch(err => {
         console.log(err);
       });
@@ -71,5 +74,43 @@ exports.getLastReceivedMail = function () {
     if (mails.length == 0)
       return new Date('2000, May 20');
     return mails[0].date;
+  });
+}
+
+exports.markAsTreated = function(id) {
+  return exports.findById().then(mail => {
+    mail.updateAttributes({
+      treated: true
+    });
+  });
+}
+
+exports.sendUntreatedMails = function () {
+  console.log("Sending untreated mails");
+  Mail.findAll({
+    where: {
+      toMe: false,
+      treated: false
+    }})
+    .then(mails => {
+      for (var index = 0; index < mails.length; index++) {
+        var mail = mails[index];
+        ContactsMapper.getContactById(mail.recipient)
+        .then(contact => {
+          var newMail = {
+            to: contact.address,
+            from: settings.myAddress,
+            text: mail.body,
+            subject: mail.subject
+          };
+          smtp.sendAnEmail(newMail)
+            .then(() => {
+              mail.updateAttributes({treated: true});
+            })
+            .catch( err => {
+              throw err;
+            });
+        });
+      }
   });
 }

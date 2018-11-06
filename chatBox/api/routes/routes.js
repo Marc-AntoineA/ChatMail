@@ -23,4 +23,5 @@ module.exports = function(app) {
 
   app.route('/refresh')
     .get(chatApi.refreshMails);
+
 }

@@ -87,8 +87,24 @@ export class SessionData {
         .subscribe(() => {
 
         }, err => {
+          // TODO
+        });
+    });
+  }
+
+  sendCurrentMail(mail) {
+    console.log("Sending email");
+    console.log("Contact : " + this.currentContact.address);
+    return new Promise(resolve => {
+      let url: string;
+      url = this.apiUrl + "/mails";
+      this.http.post(url, { address: this.currentContact.address, body: mail.body})
+        .subscribe(() => {
+
+        }, err => {
 
         });
     });
   }
+
 }

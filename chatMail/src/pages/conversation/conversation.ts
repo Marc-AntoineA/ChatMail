@@ -39,7 +39,11 @@ export class ConversationPage {
       {
         text: 'Oui',
         handler: () => {
-          console.log("Envoi du mail à effectuer ici");
+          this.sessionData.sendCurrentMail(this.currentMail)
+            .then(() => {
+              this.currentMail = {};
+              console.log("Mail sent");
+            });
         }
       }
     ]

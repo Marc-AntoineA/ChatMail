@@ -38,9 +38,23 @@ exports.listAllMails = function(req, res) {
   });
 };
 
-// TODO
+// TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
-
+  MailsMapper.addNewMail(req.body.address, {
+    body: req.body.body,
+    subject: req.body.subject,
+    toMe: false,
+    treated: false,
+    date: new Date()
+  })
+  .then(() => {
+    MailsMapper.sendUntreatedMails().then(() => {
+      res.json();
+    })
+  })
+  .catch(err => {
+    res.send(err);
+  })
 };
 
 exports.listAllMailsByContact = function(req, res) {
