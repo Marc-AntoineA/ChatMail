@@ -13,7 +13,7 @@ exports.listAllMailsByContact = function(contactAddress) {
       return Mail.findAll(
         {
           where: { recipient: contact.id },
-          order: [['date', 'DESC']]
+          order: [['date', 'ASC']]
         });
     })
     .catch(err => {
@@ -44,25 +44,22 @@ exports.getMailById = function(id) {
   return Mail.find({ where: {id: id}});
 };
 
-// TODO
-exports.getUnTreatedMails = function() {
-
-};
-
 // Ajouter un mail
 // Mail = object js avec les bonnes structures
 exports.addNewMail = function (contactAddress, mail){
-  console.log(contactAddress);
-  return ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
-      console.log(contact);
-      var contact = results[0];
-      mail.recipient = contact.id;
-      Mail.create(mail).then( () => {
-        console.log("New email created");
-      }).catch(err => {
-        console.log(err);
+
+  return new Promise((resolve, reject) => {
+    ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
+        var contact = results[0];
+        mail.recipient = contact.id;
+        Mail.create(mail).then(() => {
+          resolve();
+        });
+      })
+      .catch( err => {
+        reject(err);
       });
-  });
+    });
 };
 
 // TODO on devrait pouvoir faire ça plus facilement...
@@ -75,15 +72,7 @@ exports.getLastReceivedMail = function () {
       return new Date('2000, May 20');
     return mails[0].date;
   });
-}
-
-exports.markAsTreated = function(id) {
-  return exports.findById().then(mail => {
-    mail.updateAttributes({
-      treated: true
-    });
-  });
-}
+};
 
 exports.sendUntreatedMails = function () {
   console.log("Sending untreated mails");
