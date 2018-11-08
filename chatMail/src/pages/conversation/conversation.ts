@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, Content } from 'ionic-angular';
 import { CameraPage } from '../../pages/camera/camera';
 
 import { SessionData } from '../../providers/session-data';
@@ -9,16 +9,28 @@ import { SessionData } from '../../providers/session-data';
 @Component({
   selector: 'page-conversation',
   templateUrl: 'conversation.html',
+  queries: {
+   content: new ViewChild('content')
+  }
 })
 export class ConversationPage {
   currentMail: any;
+  content: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
       public sessionData: SessionData, private alertCtrl: AlertController) {
 
-      this.currentMail = {};
-      this.currentMail.body = "Ce court mail préenregistré imite le comportement voulu des messages des messages de brouillon. Un message non achevé se trouve toujours ici (si tant-est qu'on regarde pour la bonne personne, bien entendu !).\
-      Voilà, voilà, tout est écrit.";
+      this.sessionData.notifyModification.subscribe(evt => {
+        this.content.scrollToBottom();
+       });
+  }
+
+  ionViewDidEnter(){
+    this.scrollToLastMail();
+  }
+
+  scrollToLastMail() {
+    this.content.scrollToBottom();
   }
 
   openCamera(){
@@ -38,11 +50,11 @@ export class ConversationPage {
       },
       {
         text: 'Oui',
+        cssClass: 'green',
         handler: () => {
-          this.sessionData.sendCurrentMail(this.currentMail)
+          this.sessionData.sendCurrentMail()
             .then(() => {
-              this.currentMail = {};
-              console.log("Mail sent");
+
             });
         }
       }

@@ -9,35 +9,31 @@ page-conversation {
   margin: 40px 0px;
 }
 .message {
-  max-width: 80%;
+  max-width: 100%;
   margin: 0px 7px;
 }
 
 .messages-container {
-  display: flex;
-  flex-direction: column;
-  background-color: $lightgray;
   padding: 20px 10px;
-  height: 100%;
 }
 
 .message-content {
-  border: 1px solid black;
+  //border: 1px solid black;
   padding: 5px 10px;
   margin: 7px 0px;
-  border-color: $gray;
+  //border-color: $gray;
   white-space: pre-wrap;
 }
 
 .message-received .message-content {
     border-radius: 0px 12px 12px 0px;
-    background-color: $gray;
+    background-color: #FFDC00;
     padding-right: 10px;
 }
 
 .message-sent .message-content {
     border-radius: 12px 0px 0px 12px;
-    background-color: $gray;
+    background-color: #FF851B;
     padding-left: 10px;
 }
 
@@ -46,18 +42,18 @@ page-conversation {
 }
 
 .message-received .message-header {
-  text-align:left;
+  text-align: left;
 }
 
 .message-received {
-  align-self: left;
+  padding-right: 15%;
 }
 
 .message-header {
 
 }
 .message-sent {
-  align-self: right
+  padding-left: 15%;
 }
 
 /* BUG ICI, TODO À CREUSER */
@@ -69,4 +65,56 @@ page-conversation {
 .message-header {
   font-size: 13px;
   margin-top: 15px;
+}
+
+.buttons-footer {
+  display: float;
+}
+
+.left {
+  float:left;
+}
+
+.right {
+  float: right;
+}
+
+.button {
+  height: 55px;
+}
+
+.buttons-footer .button {
+  width: 40%;
+}
+
+.buttons-footer .left {
+  margin-left: 5%;
+}
+
+.buttons-footer .right {
+  margin-right: 5%;
+}
+
+ion-icon {
+  font-size:3em!important;
+}
+
+.green {
+  background-color: #2ECC40!important;
+}
+
+.blue {
+  background-color: #0074D9!important;
+}
+
+.purple {
+  background-color: #B10DC9!important;
+}
+
+.maroon {
+  background-color: #85144b!important;
+}
+
+ion-navbar h3 {
+  margin-left: 50px;
 }

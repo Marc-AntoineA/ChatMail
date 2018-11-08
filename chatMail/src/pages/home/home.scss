@@ -12,10 +12,27 @@ page-home {
 }
 
 .notification {
-  background-color: #b8b8b8;
   border-radius: 7px;
   text-align: center;
   padding: 2px;
   margin: 4px;
   font-size: 14px;
+}
+
+.center {
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.orange {
+  background-color: #ffc053;
+}
+
+.lightorange {
+  background-color: orange;
+}
+
+.darkorange {
+  background-color: #FEE2B5;
 }

@@ -10,7 +10,23 @@ var imapProvider  = require('../providers/imap');
 exports.listAllContacts = function(req, res) {
   ContactsMapper.listAllContacts()
   .then(contacts => {
-    res.json(contacts);
+    var promises = [];
+    for (var index = 0; index < contacts.length; index++) {
+      promises.push(MailsMapper.getDateOfLastMailWithContactId(contacts[index].id));
+    }
+    Promise.all(promises).then(values => {
+      var newContacts = [];
+      for (var index = 0; index < contacts.length; index++) {
+        newContacts.push({
+          address: contacts[index].address,
+          forename: contacts[index].forename,
+          name: contacts[index].name,
+          date: values[index]
+        });
+      }
+      newContacts.sort(function(a, b){ return a.date <= b.date;});
+      res.json(newContacts);
+    });
   })
   .catch(err => {
     res.send(err);

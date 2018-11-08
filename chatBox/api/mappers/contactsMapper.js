@@ -3,7 +3,7 @@
 var Contact = require('../models/contactModel').Contact;
 
 exports.listAllContacts = function() {
-  return Contact.findAll({attributes: ['address', 'name', 'forename']});
+  return Contact.findAll({attributes: ['address', 'name', 'forename', 'id']});
 };
 
 exports.getContactById = function(id) {

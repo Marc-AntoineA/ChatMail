@@ -1,23 +1,32 @@
 <ion-header>
   <ion-navbar>
-    <h3 *ngIf="sessionData.currentContact"> {{ sessionData.currentContact.vorname }} {{ sessionData.currentContact.name }} </h3>
+
+    <div class="toolbar">
+      <h3 *ngIf="sessionData.currentContact">
+        Messages de
+         {{ sessionData.currentContact.forename }} {{ sessionData.currentContact.name }}
+         {{ sessionData.currentContact.address }}
+       </h3>
+       <button ion-button icon-start (click)="scrollToLastMail()" class="button right maroon 1-part">
+         <ion-icon name="eye"></ion-icon>
+         Voir le dernier message échangé le {{ sessionData.getDateOfLastMail()|date:"dd/MM/yyyy 'à' HH:mm" }}
+       </button>
+   </div>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <div class="messages-container">
+<ion-content #content class="message-container">
     <div *ngFor="let message of sessionData.listAllCurrentMails()"
       class="message"
       [ngClass]="message.toMe ? 'message-received': 'message-sent'">
       <div class="message-header">
-        {{ message.date }} - {{ message.subject }}
+        {{ message.toMe ? 'Reçu': 'Envoyé'}} le {{ message.date|date:"dd/MM/yyyy 'à' HH:mm" }} - {{ message.subject }}
       </div>
 
       <div class="message-content">
         {{ message.body }}
       </div>
     </div>
-  </div>
 
 </ion-content>
 
@@ -27,18 +36,20 @@
 
   <ion-textarea
     placeholder="Appuyer ici pour écrire un nouveau message"
-    [(ngModel)]="currentMail.body">
+    [(ngModel)]="sessionData.currentMail.body">
   </ion-textarea>
 
   <!-- TODO en priorité la gestion des deux appareils photos back et front-->
-  <button ion-button icon-start (click)="openCamera()">
-    <ion-icon name="camera"></ion-icon>
-    Ajouter une photo
-  </button>
+  <div class="buttons-footer">
+    <button ion-button icon-start (click)="openCamera()" class="button left green">
+      <ion-icon name="camera"></ion-icon>
+      Ajouter une photo
+    </button>
 
-  <button ion-button icon-start (click)="sendMail()">
-    <ion-icon name="send"></ion-icon>
-    Envoyer le courier
-  </button>
+    <button ion-button icon-start (click)="sendMail()" class="button right blue">
+      <ion-icon name="send"></ion-icon>
+      Envoyer le courier
+    </button>
+  </div>
 
 </ion-footer>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -9,15 +9,23 @@ export class SessionData {
   listContacts: any;
   listCurrentMails: any;
   currentContact: any;
+  currentMail: any;
+  @Output() notifyModification: EventEmitter<any> = new EventEmitter();
 
   constructor(public http: HttpClient){
       this.apiUrl = "http://localhost:3000";
       this.currentContact = null;
+      this.currentMail = {};
   }
 
   // TODO faire les choses proprement avec la requête au besoin
   listAllContacts(){
     return this.listContacts;
+  }
+
+  getDateOfLastMail() {
+    if (this.listCurrentMails == null) return null;
+    return this.listCurrentMails[this.listCurrentMails.length - 1].date;
   }
 
   getAllContacts(){
@@ -39,12 +47,16 @@ export class SessionData {
   setCurrentContact(contact){
       this.currentContact = contact;
       this.listCurrentMails = null;
+      this.resetCurrentMail();
       this.getAllCurrentMails();
+  }
+
+  resetCurrentMail() {
+    this.currentMail = {body: ""};
   }
 
   getAllCurrentMails(){
       console.log("Téléchargement de tous les mails de " + this.currentContact.address);
-
       return new Promise(resolve => {
         let url: string;
         url = this.apiUrl + "/mails/" + this.currentContact.address;
@@ -52,6 +64,7 @@ export class SessionData {
         this.http.get(url)
           .subscribe((mails: any) => {
             this.listCurrentMails = mails;
+            this.notifyModification.emit('downloadedAllCurrentMails');
           }, err => {
             // TODO gestion de l'erreur adéquate
         });
@@ -92,15 +105,16 @@ export class SessionData {
     });
   }
 
-  sendCurrentMail(mail) {
+  sendCurrentMail() {
     console.log("Sending email");
     console.log("Contact : " + this.currentContact.address);
     return new Promise(resolve => {
       let url: string;
       url = this.apiUrl + "/mails";
-      this.http.post(url, { address: this.currentContact.address, body: mail.body})
+      this.http.post(url, { address: this.currentContact.address, body: this.currentMail.body})
         .subscribe(() => {
-
+          this.getAllCurrentMails();
+          this.resetCurrentMail();
         }, err => {
 
         });

@@ -63,6 +63,11 @@ exports.addNewMail = function (contactAddress, mail){
 };
 
 // TODO on devrait pouvoir faire ça plus facilement...
+/* TODO regarder ça
+Project.min('age', { where: { age: { $gt: 5 } } }).then(function(min) {
+  // will be 10
+})
+*/
 exports.getLastReceivedMail = function () {
   return Mail.findAll({
     where: { toMe: true },
@@ -102,4 +107,9 @@ exports.sendUntreatedMails = function () {
         });
       }
   });
-}
+};
+
+exports.getDateOfLastMailWithContactId = function(contactId) {
+    console.log(contactId);
+    return Mail.max('date', { where: {recipient: contactId}});
+};
