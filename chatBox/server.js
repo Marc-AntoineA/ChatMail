@@ -13,7 +13,7 @@ app.all('*', function(req, res, next) {
 });
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '5mb'}));
 
 var routes = require('./api/routes/routes');
 routes(app);

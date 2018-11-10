@@ -102,3 +102,13 @@ exports.refreshMails = function(req, res) {
     imapProvider.getAllMailsSince(date, res);
   });
 };
+
+exports.testAttachment = function(req, res) {
+  AttachmentsMapper.addAttachmentWithMailId(req.body.mailId, req.body)
+    .then(() => {
+      res.json();
+    })
+    .catch(err => {
+      res.send(err);
+    })
+};
