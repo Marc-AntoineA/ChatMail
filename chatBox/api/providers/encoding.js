@@ -9,7 +9,7 @@ exports.fromQp = function(string) {
   try {
     return utf8.decode(quotedPrintable.decode(string));
   } catch(err) {
-    console.log(err); // TODO manager les erreurs
+    //console.log(err); // TODO manager les erreurs
     return quotedPrintable.decode(string);
   }
 

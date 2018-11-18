@@ -9,6 +9,7 @@ var inspect = require('util').inspect;
 var imap = require('../../settings').imap;
 var fs = require('fs'), fileStream;
 var MailsMapper = require('../mappers/mailsMapper');
+var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var encoding = require('./encoding');
 
 const simpleParser = require('mailparser').simpleParser;
@@ -25,21 +26,50 @@ function openInbox(cb) {
   imap.openBox('INBOX', true, cb);
 }
 
-
 function saveMailIntoDatabase(mail) {
+
+  console.log("saveMailIntoDatabase");
+
   var newMail = {};
-  // TODO extraire le mail
   var address  = encoding.fromQp(mail.from.value[0].address);
+  console.log("address");
   if (address == "addresse.de.test.785@gmail.com") return;
-  //newMail.to = mail.to.value[0].address;
-  newMail.body = encoding.fromQp(mail.text);
+
+  console.log("address diff");
+  if (mail.text != undefined)
+    newMail.body = encoding.fromQp(mail.text);
+  else
+    newMail.body = "";
+
   newMail.subject = encoding.fromQp(mail.subject);
   newMail.date = mail.date;
   newMail.treated = true;
   newMail.toMe = true;
-  //console.log(newMail);
 
-  MailsMapper.addNewMail(address, newMail); // Faire en sorte d'éviter les doublons
+  MailsMapper.addNewMail(address, newMail)
+    .then((mailId) => {
+      var attachments = mail.attachments;
+      if (attachments == undefined) return;
+      for (var i = 0; i < attachments.length; i++) {
+        var attachment = attachments[i];
+        console.log(attachment);
+        var newAttachment = {
+          size: attachment.size,
+          contentType: attachment.contentType,
+          checkSum: attachment.checksum
+        };
+
+        if (attachment.filename != undefined)
+          newAttachment.fileName  = attachment.filename;
+
+        newAttachment.data = attachment.content.toString('base64');
+
+        AttachmentsMapper.addAttachmentWithMailId(mailId, newAttachment);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    }); // Faire en sorte d'éviter les doublons
 }
 
 
@@ -58,7 +88,6 @@ function saveMailIntoFile(msg, seqno) {
 // --> date
 // --> to.text
 // --> from.text
-
 exports.getAllMailsSince = function(date, res) {
   imap.connect();
   imap.once('ready', function() {

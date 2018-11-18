@@ -52,8 +52,18 @@ exports.addNewMail = function (contactAddress, mail){
     ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
         var contact = results[0];
         mail.recipient = contact.id;
-        Mail.create(mail).then(() => {
-          resolve();
+        Mail.findOrCreate({
+          where:{
+              recipient: mail.recipient,
+              date: mail.date,
+              subject: mail.subject,
+              body: mail.body,
+              toMe: mail.toMe,
+              treated: mail.treated
+          }
+        })
+        .then(mails => {
+          resolve(mails[0].id);
         });
       })
       .catch( err => {

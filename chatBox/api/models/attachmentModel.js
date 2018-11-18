@@ -6,7 +6,7 @@ var Mail = require('./mailModel').Mail;
 
 var Attachment = database.define("chat_attachments", {
   contentType: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false
   },
   data: {
@@ -30,7 +30,7 @@ var Attachment = database.define("chat_attachments", {
     allowNull: false
   },
   checkSum: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false
   }
 });

@@ -6,6 +6,7 @@ var Attachment = require('../models/attachmentModel').Attachment;
 
 exports.addAttachmentWithMailId = function(mailId, attachment) {
     attachment.mail = mailId;
+    console.log(attachment);
     return Attachment.create(attachment);
 };
 
