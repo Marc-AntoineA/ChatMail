@@ -32,10 +32,8 @@ function saveMailIntoDatabase(mail) {
 
   var newMail = {};
   var address  = encoding.fromQp(mail.from.value[0].address);
-  console.log("address");
   if (address == "addresse.de.test.785@gmail.com") return;
 
-  console.log("address diff");
   if (mail.text != undefined)
     newMail.body = encoding.fromQp(mail.text);
   else

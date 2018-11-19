@@ -1,25 +1,22 @@
 'use strict';
 
 var Attachment = require('../models/attachmentModel').Attachment;
+var Sequelize = require('sequelize');
 
-// TODO 
+const Op = Sequelize.Op;
 
+// TODO find or create
 exports.addAttachmentWithMailId = function(mailId, attachment) {
     attachment.mail = mailId;
-    console.log(attachment);
     return Attachment.create(attachment);
 };
 
-/*exports.createContact = function(contact) {
-  return Contact.create(contact)
-  .then(() => {
-    return exports.getContactByAddress(contact.address);
-  })
-  .catch(err => {
-    throw err;
-  });
-};*/
-
+// TODO update la liste des formats gérés
 exports.listAttachmentsByMailId = function (mailId) {
-
+  return Attachment.findAll({where: {
+    mail: mailId,
+    contentType: {
+      [Op.in]: ['image/png']
+    }
+  }});
 };

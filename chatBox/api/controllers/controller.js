@@ -76,7 +76,21 @@ exports.sendAnEmail = function(req, res) {
 exports.listAllMailsByContact = function(req, res) {
   MailsMapper.listAllMailsByContact(req.params.address)
     .then(mails => {
-        res.json(mails);
+      var promises = [];
+      for (var i = 0; i < mails.length; i++)
+        promises.push(AttachmentsMapper.listAttachmentsByMailId(mails[i].id));
+
+      Promise.all(promises).then(results => {
+        for (var i = 0; i < mails.length; i++) {
+          mails[i].alcool = "yes";
+          if (results[i] != undefined) {
+            mails[i].dataValues.attachment = results[i];
+          }
+        }
+        console.log(mails);
+        res.send(mails);
+      });
+
     }).catch(err => {
       res.send(err);
     });
