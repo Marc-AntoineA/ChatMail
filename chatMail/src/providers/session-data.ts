@@ -64,6 +64,10 @@ export class SessionData {
         this.http.get(url)
           .subscribe((mails: any) => {
             this.listCurrentMails = mails;
+            for (var mailIndex = 0; mailIndex < mails.length; mailIndex++) {
+              var mail = mails[mailIndex];
+              console.log(mail);
+            }
             this.notifyModification.emit('downloadedAllCurrentMails');
           }, err => {
             // TODO gestion de l'erreur adéquate
@@ -117,6 +121,21 @@ export class SessionData {
           this.resetCurrentMail();
         }, err => {
 
+        });
+    });
+  }
+
+  // TODO sauvegarde en local
+  getAllPictures(mailId: number) {
+    console.log("GetAllPictures for mailId: " + mailId);
+    return new Promise(resolve => {
+      let url: string;
+      url = this.apiUrl + "/mails/attachments/" + mailId;
+      this.http.get(url)
+        .subscribe((pictures: any) => {
+          resolve(pictures);
+        }, err => {
+          // TODO gestion de l'erreur adéquate
         });
     });
   }

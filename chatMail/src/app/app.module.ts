@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ConversationPage } from '../pages/conversation/conversation';
+import { GaleryPage } from '../pages/galery/galery';
 import { CameraPage } from '../pages/camera/camera';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { CameraPage } from '../pages/camera/camera';
     MyApp,
     HomePage,
     ConversationPage,
+    GaleryPage,
     CameraPage
   ],
   imports: [
@@ -29,6 +31,7 @@ import { CameraPage } from '../pages/camera/camera';
     MyApp,
     HomePage,
     ConversationPage,
+    GaleryPage,
     CameraPage
   ],
   providers: [

@@ -7,6 +7,15 @@ var imapProvider  = require('../providers/imap');
 
 // TODO refactoring --> toutes les fonctions qui font appel aux 'modèles' passent dans les mappers
 
+exports.getAttachmentsByMail = function(req, res) {
+  AttachmentsMapper.listAttachmentsByMailId(req.params.mail).then(attachments => {
+    res.json(attachments);
+  })
+  .catch(err => {
+    res.send(err);
+  });
+};
+
 exports.listAllContacts = function(req, res) {
   ContactsMapper.listAllContacts()
   .then(contacts => {
@@ -82,12 +91,10 @@ exports.listAllMailsByContact = function(req, res) {
 
       Promise.all(promises).then(results => {
         for (var i = 0; i < mails.length; i++) {
-          mails[i].alcool = "yes";
           if (results[i] != undefined) {
-            mails[i].dataValues.attachment = results[i];
+            mails[i].dataValues.numberAttachments = results[i].length;
           }
         }
-        console.log(mails);
         res.send(mails);
       });
 

@@ -1,0 +1,11 @@
+
+
+<div class="preview-container" *ngIf="pictures.length > 4">
+  <div class="preview">
+    <img [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + pictures[4].data)" alt="Red dot" />
+  </div>
+
+  <div class="footer">
+    <img *ngFor="let picture of pictures" [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + picture.data)" alt="Red dot" />
+  </div>
+</div>

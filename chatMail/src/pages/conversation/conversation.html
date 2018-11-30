@@ -20,12 +20,17 @@
       class="message"
       [ngClass]="message.toMe ? 'message-received': 'message-sent'">
       <div class="message-header">
+        <span *ngIf="message.numberAttachments  > 0" class="message-pictures green" (click)="openGalery(message)">{{ message.numberAttachments }} photo(s) disponibles</span>
         {{ message.toMe ? 'Reçu': 'Envoyé'}} le {{ message.date|date:"dd/MM/yyyy 'à' HH:mm" }} - {{ message.subject }}
       </div>
 
-      <div class="message-content">
-        {{ message.body }}
-      </div>
+      <div class="message-content">{{ trim(message.body) }}</div>
+      <!-- images -->
+      <p *ngIf="message.attachment"> {{ message.attachment }} </p>
+
+      <!--<img *ngFor="let image of message.attachment"
+      src="data:image/png;base64, {{ image.data }}" alt="Red dot" />-->
+
     </div>
 
 </ion-content>

@@ -21,6 +21,9 @@ module.exports = function(app) {
   app.route('/mails/date/:date/:address')
     .get(chatApi.listNewMailsByContact);
 
+  app.route('/mails/attachments/:mail')
+    .get(chatApi.getAttachmentsByMail);
+
   app.route('/refresh')
     .get(chatApi.refreshMails);
 

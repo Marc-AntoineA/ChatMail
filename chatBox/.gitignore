@@ -3,3 +3,6 @@ settings.js
 node_modules/
 tmp/
 mails/
+api/models/test.js
+api/providers/imap-test.js
+api/providers/smtp-test.js
