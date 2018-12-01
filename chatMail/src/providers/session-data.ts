@@ -1,5 +1,6 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Storage } from '@ionic/storage';
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class SessionData {
   currentMail: any;
   @Output() notifyModification: EventEmitter<any> = new EventEmitter();
 
-  constructor(public http: HttpClient){
+  constructor(public http: HttpClient, private storage: Storage){
       this.apiUrl = "http://localhost:3000";
       this.currentContact = null;
       this.currentMail = {};
@@ -126,8 +127,8 @@ export class SessionData {
   }
 
   // TODO sauvegarde en local
-  getAllPictures(mailId: number) {
-    console.log("GetAllPictures for mailId: " + mailId);
+  downloadAllPictures(mailId: number) {
+    console.log("DownloadtAllPictures for mailId: " + mailId);
     return new Promise(resolve => {
       let url: string;
       url = this.apiUrl + "/mails/attachments/" + mailId;
@@ -140,4 +141,20 @@ export class SessionData {
     });
   }
 
+  getAllPictures(mailId: number) {
+    return new Promise(resolve => {
+
+      let key = 'attachments-' + mailId;
+      this.storage.get(key).then((val) =>{
+        if (val != undefined){
+          resolve(val);
+        } else {
+          this.downloadAllPictures(mailId).then((val) => {
+            this.storage.set(key, val);
+            resolve(val);
+          });
+        }
+      });
+    });
+  }
 }
