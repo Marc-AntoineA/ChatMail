@@ -72,10 +72,10 @@ export class ConversationPage {
     console.log('ionViewDidLoad ConversationPage');
   }
 
-  openGalery(message: object) {
+  openGalery(message: any) {
     if (message.id != undefined)
       this.navCtrl.push(GaleryPage, {'id': message.id});
     else
-      console.log("Open galery failed");
+      console.log("Error with open galery");
   }
 }

@@ -103,7 +103,9 @@ export class SessionData {
       console.log(url);
       this.http.get(url)
         .subscribe(() => {
-
+          this.getAllCurrentMails();
+          this.notifyModification.emit('downloadedAllCurrentMails');
+          this.getAllContacts();
         }, err => {
           // TODO
         });
@@ -143,7 +145,6 @@ export class SessionData {
 
   getAllPictures(mailId: number) {
     return new Promise(resolve => {
-
       let key = 'attachments-' + mailId;
       this.storage.get(key).then((val) =>{
         if (val != undefined){
