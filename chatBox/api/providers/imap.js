@@ -46,11 +46,11 @@ function saveMailIntoDatabase(mail) {
 
   MailsMapper.addNewMail(address, newMail)
     .then((mailId) => {
+      if (mailId == undefined) return;
       var attachments = mail.attachments;
       if (attachments == undefined) return;
       for (var i = 0; i < attachments.length; i++) {
         var attachment = attachments[i];
-        console.log(attachment);
         var newAttachment = {
           size: attachment.size,
           contentType: attachment.contentType,

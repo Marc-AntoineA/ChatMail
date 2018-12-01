@@ -46,6 +46,7 @@ exports.getMailById = function(id) {
 
 // Ajouter un mail
 // Mail = object js avec les bonnes structures
+// Warning. si déjà créé, renvoie true
 exports.addNewMail = function (contactAddress, mail){
 
   return new Promise((resolve, reject) => {
@@ -62,8 +63,11 @@ exports.addNewMail = function (contactAddress, mail){
               treated: mail.treated
           }
         })
-        .then(mails => {
-          resolve(mails[0].id);
+        .then((mail, created) => {
+          if (created)
+            resolve(mail.id);
+          else
+            resolve(undefined);
         });
       })
       .catch( err => {
