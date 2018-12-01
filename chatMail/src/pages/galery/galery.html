@@ -1,11 +1,24 @@
 
 
 <div class="preview-container" *ngIf="pictures.length > 0"> <!-- WARNING TODO remove -->
+
+
+
   <div class="preview">
-    <img [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + pictures[0].data)" alt="Red dot" />
+    <img [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + pictures[currentPictureIndex].data)" alt="Red dot" />
   </div>
 
   <div class="footer">
-    <img *ngFor="let picture of pictures" [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + picture.data)" alt="Red dot" />
+    <img *ngFor="let picture of pictures; let i = index"
+    [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + picture.data)"
+    alt="{{ picture.filename }}"
+    (click) = "changePicture(i)" />
+  </div>
+
+  <div>
+    <button ion-button class="button center green" (click)="quitGalery()">
+      <ion-icon name="return-left"></ion-icon>
+       Retourner voir le courrier
+    </button>
   </div>
 </div>

@@ -16,12 +16,14 @@ import { SessionData } from '../../providers/session-data';
 })
 export class GaleryPage {
   pictures: any;
+  currentPictureIndex: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
       public sessionData: SessionData, private alertCtrl: AlertController, public menu : MenuController,
       private _DomSanitizationService: DomSanitizer) {
 
       this.pictures = [];
+      this.currentPictureIndex = -1;
   }
 
   ionViewDidLoad(){
@@ -31,13 +33,21 @@ export class GaleryPage {
 
       this.sessionData.getAllPictures(mailId).then((results) => {
         this.pictures = results;
-        console.log(this.pictures);
+        this.currentPictureIndex = 0;
       });
       this.menu.enable(false);
+  }
+
+  changePicture(index: number) {
+    this.currentPictureIndex = index;
+    console.log(this.currentPictureIndex);
   }
 
   ionViewWillLeave(){
     this.menu.enable(true);
   }
 
+  quitGalery() {
+    this.navCtrl.pop();
+  }
 }
