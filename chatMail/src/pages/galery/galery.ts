@@ -31,6 +31,7 @@ export class GaleryPage {
 
       this.sessionData.getAllPictures(mailId).then((results) => {
         this.pictures = results;
+        console.log(this.pictures);
       });
       this.menu.enable(false);
   }

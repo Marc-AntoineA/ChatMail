@@ -1,7 +1,16 @@
 
+img {
+  border-radius: 20px;
+  border: solid 5px #454545;
+}
+
 .footer img {
   height: 90px;
   margin: 10px 5px;
+}
+
+.footer {
+  text-align: center;
 }
 
 .preview {
@@ -15,4 +24,5 @@
 
 .preview-container {
   background-color: gray;
+  height: 100%;
 }

@@ -38,8 +38,8 @@ export class ConversationPage {
     this.navCtrl.push(CameraPage);
   }
 
-  trim(str) {
-    return String.trim(str);
+  trim(str: string) {
+    return str.trim();
   }
 
   sendMail(){
@@ -73,7 +73,9 @@ export class ConversationPage {
   }
 
   openGalery(message: object) {
-    //console.log("Open galery");
-    this.navCtrl.push(GaleryPage, {'id': message.id});
+    if (message.id != undefined)
+      this.navCtrl.push(GaleryPage, {'id': message.id});
+    else
+      console.log("Open galery failed");
   }
 }
