@@ -116,6 +116,30 @@ ion-icon {
   background-color: #85144b!important;
 }
 
+.red {
+  background-color: #801515!important;
+}
+
+.validation-button {
+  width: 40%;
+  color: white!important;
+}
+
+.validation-button span {
+  justify-content: center!important;
+}
+
+.validation-alert {
+}
+
+.validation-alert .alert-wrapper {
+  max-width: 600px;
+}
+
+.validation-alert .alert-button-group {
+  display: inline;
+}
+
 ion-navbar h3 {
   margin-left: 50px;
 }

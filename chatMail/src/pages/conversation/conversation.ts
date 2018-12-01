@@ -46,16 +46,18 @@ export class ConversationPage {
     let alert = this.alertCtrl.create({
     title: 'Envoi du courrier',
     message: 'Êtes-vous sûr de vouloir envoyer ce courier électronique maintenant ?',
+    cssClass: 'validation-alert',
     buttons: [
       {
         text: 'Non, plus tard',
         role: 'cancel',
+        cssClass: 'red validation-button left',
         handler: () => {
         }
       },
       {
         text: 'Oui',
-        cssClass: 'green',
+        cssClass: 'green validation-button right',
         handler: () => {
           this.sessionData.sendCurrentMail()
             .then(() => {
