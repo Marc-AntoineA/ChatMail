@@ -4,6 +4,7 @@ var MailsMapper = require('../mappers/mailsMapper');
 var ContactsMapper = require('../mappers/contactsMapper');
 var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var imapProvider  = require('../providers/imap');
+var settings = require('../../settings.js');
 
 // TODO refactoring --> toutes les fonctions qui font appel aux 'modèles' passent dans les mappers
 
@@ -67,7 +68,7 @@ exports.listAllMails = function(req, res) {
 exports.sendAnEmail = function(req, res) {
   MailsMapper.addNewMail(req.body.address, {
     body: req.body.body,
-    subject: req.body.subject,
+    subject: req.body.subject == undefined ? settings.DEFAULT_SUBJECT : req.body.subject,
     toMe: false,
     treated: false,
     date: new Date()

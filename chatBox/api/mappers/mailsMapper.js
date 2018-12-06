@@ -64,9 +64,6 @@ exports.addNewMail = function (contactAddress, mail){
           }
         })
         .spread((mail, created) => {
-          console.log("new mail");
-          console.log(mail);
-          console.log(created);
           if (created)
             resolve(mail.id);
           else
