@@ -4,46 +4,39 @@
     <div class="toolbar">
       <h3 *ngIf="sessionData.currentContact">
         Messages de
-         {{ sessionData.currentContact.forename }} {{ sessionData.currentContact.name }}
-         {{ sessionData.currentContact.address }}
-       </h3>
-       <button ion-button icon-start (click)="scrollToLastMail()" class="button right maroon 1-part">
-         <ion-icon name="eye"></ion-icon>
-         Voir le dernier message échangé le {{ sessionData.getDateOfLastMail()|date:"dd/MM/yyyy 'à' HH:mm" }}
-       </button>
-   </div>
+        {{ sessionData.currentContact.forename }} {{ sessionData.currentContact.name }}
+        {{ sessionData.currentContact.address }}
+      </h3>
+      <button ion-button icon-start (click)="scrollToLastMail()" class="button right maroon 1-part">
+        <ion-icon name="eye"></ion-icon>
+        Voir le dernier message échangé le {{ sessionData.getDateOfLastMail()|date:"dd/MM/yyyy 'à' HH:mm" }}
+      </button>
+    </div>
   </ion-navbar>
 </ion-header>
 
 <ion-content #content class="message-container">
-    <div *ngFor="let message of sessionData.listAllCurrentMails()"
-      class="message"
-      [ngClass]="message.toMe ? 'message-received': 'message-sent'">
-      <div class="message-header">
-        <span *ngIf="message.numberAttachments  > 0" class="message-pictures green" (click)="openGalery(message)">{{ message.numberAttachments }} photo(s) disponibles</span>
-        {{ message.toMe ? 'Reçu': 'Envoyé'}} le {{ message.date|date:"dd/MM/yyyy 'à' HH:mm" }} - {{ message.subject }}
-      </div>
-
-      <div *ngIf="message.body != ''" class="message-content">{{ trim(message.body) }}</div>
-      <div *ngIf="message.body == ''" class="message-content">(Courrier vide)</div>
-      <!-- images -->
-      <p *ngIf="message.attachment"> {{ message.attachment }} </p>
-
-      <!--<img *ngFor="let image of message.attachment"
-      src="data:image/png;base64, {{ image.data }}" alt="Red dot" />-->
-
+  <div *ngFor="let message of sessionData.listAllCurrentMails()" class="message" [ngClass]="message.toMe ? 'message-received': 'message-sent'">
+    <div class="message-header">
+      <span *ngIf="message.numberAttachments  > 0" class="message-pictures green" (click)="openGalery(message)">{{ message.numberAttachments }} photo(s) disponibles</span>
+      {{ message.toMe ? 'Reçu': 'Envoyé'}} le {{ message.date|date:"dd/MM/yyyy 'à' HH:mm" }} - <span>{{ message.subject == null || message.subject == '' ? "(Pas d'objet)" : message.subject }}</span>
     </div>
+    <div *ngIf="message.body != ''" class="message-content">{{ trim(message.body) }}</div>
+    <div *ngIf="message.body == ''" class="message-content">(Courrier vide)</div>
+    <!-- images -->
+
+  </div>
 
 </ion-content>
 
-<ion-footer>
+<ion-footer class="conversation-footer">
   <h4>Écrire ou continuer un message </h4>
   <!-- TODO le clic sur le bouton fait obligatoirement descendre tout en bas -->
 
-  <ion-textarea
-    placeholder="Appuyer ici pour écrire un nouveau message"
-    [(ngModel)]="sessionData.currentMail.body">
-  </ion-textarea>
+  <textarea placeholder="Appuyer ici pour écrire un nouveau message"
+    [(ngModel)]="sessionData.currentMail.body"
+    autocomplete="false" autocorrect="false">
+  </textarea>
 
   <!-- TODO en priorité la gestion des deux appareils photos back et front-->
   <div class="buttons-footer">

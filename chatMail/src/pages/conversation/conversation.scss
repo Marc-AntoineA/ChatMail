@@ -8,13 +8,42 @@ page-conversation {
 .h3 {
   margin: 40px 0px;
 }
+
+h4 {
+  font-size: 1.7rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .message {
   max-width: 100%;
   margin: 0px 7px;
 }
 
-.messages-container {
+.conversation-footer {
+  height: 198px!important;
+}
+
+textarea {
+  width: 98%;
+  resize: none;
+  height: 95px;
+  border-width: 0;
+  background-color: #efefef;
+  padding: 5px;
+  margin: 5px;
+}
+
+.message-container {
   padding: 20px 10px;
+}
+
+.message-container .fixed-content{
+  margin-bottom: 200px!important;
+}
+
+.message-container .scroll-content {
+  margin-bottom: 200px!important;
 }
 
 .message-content {
