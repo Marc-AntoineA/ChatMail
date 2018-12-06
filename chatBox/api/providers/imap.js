@@ -34,12 +34,8 @@ function saveMailIntoDatabase(mail) {
   var address  = encoding.fromQp(mail.from.value[0].address);
   if (address == "addresse.de.test.785@gmail.com") return;
 
-  if (mail.text != undefined)
-    newMail.body = encoding.fromQp(mail.text);
-  else
-    newMail.body = "";
-
-  newMail.subject = encoding.fromQp(mail.subject);
+  newMail.body = (mail.text != undefined) ? encoding.fromQp(mail.text) : '';
+  newMail.subject = (mail.subject != undefined) ? encoding.fromQp(mail.subject) : '';
   newMail.date = mail.date;
   newMail.treated = true;
   newMail.toMe = true;
