@@ -3,6 +3,17 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
 
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions, CameraPreviewDimensions } from '@ionic-native/camera-preview';
 
+const cameraPreviewOpts: CameraPreviewOptions = {
+  x: 0,
+  y: 0,
+  width: window.screen.width,
+  height: window.screen.height,
+  camera: 'rear',
+  tapPhoto: true,
+  previewDrag: true,
+  toBack: true,
+  alpha: 1
+};
 
 @IonicPage()
 @Component({
@@ -19,21 +30,9 @@ export class CameraPage {
 
     this.backCamera = true;
 
-    let options = {
-      x: 0,
-      y: 0,
-      width: window.screen.width,
-      height: window.screen.height,
-      camera: this.backCamera ? cameraPreview.CAMERA_DIRECTION.BACK : cameraPreview.CAMERA_DIRECTION.FRONT,
-      toBack: true,
-      tapPhoto: true,
-      previewDrag: false,
-      tapFocus: false,
-    };
 
-
-    cameraPreview.startCamera(options);
   }
+
 
   takePicture(){
     console.log("Photo prise...");
@@ -47,9 +46,21 @@ export class CameraPage {
 
   ionViewDidLoad(){
       this.menu.enable(false);
+      // start camera
+      this.cameraPreview.startCamera(
+        {
+          x: 0,
+          y: 0,
+          width: window.screen.width,
+          height: window.screen.height,
+          toBack: true,
+          previewDrag: false,
+          tapPhoto: true});
+      this.cameraPreview.show();
   }
-  
+
   ionViewWillLeave(){
+    this.cameraPreview.stopCamera();
     this.menu.enable(true);
   }
 

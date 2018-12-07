@@ -1,9 +1,18 @@
-page-camera {
 
+ion-app {
+  background-color: transparent!important;
+}
+
+page-camera {
+  background: transparent;
+  opacity: 1;
 }
 
 .buttons-container {
-  margin-height: 80%;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  z-index: 1000;
 }
 
 .button-left {
