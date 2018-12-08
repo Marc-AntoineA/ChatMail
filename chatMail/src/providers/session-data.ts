@@ -11,6 +11,8 @@ export class SessionData {
   listCurrentMails: any;
   currentContact: any;
   currentMail: any;
+  getOptions: any;
+
   @Output() notifyModification: EventEmitter<any> = new EventEmitter();
 
   constructor(public http: HttpClient, private storage: Storage){
@@ -28,6 +30,7 @@ export class SessionData {
       this.http.get('assets/settings.json').toPromise().then((res: any) => {
         this.token = res.token;
         this.apiUrl = res.apiUrl
+        this.getOptions = { headers: { "Authorization": 'Token ' + this.token } };
         console.log("resolve");
         resolve();
       });
@@ -50,7 +53,7 @@ export class SessionData {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/contacts";
-        this.http.get(url).subscribe( (contacts: any) => {
+        this.http.get(url, this.getOptions).subscribe( (contacts: any) => {
             this.listContacts = contacts;
             if(contacts.length > 0) this.setCurrentContact(contacts[0]);
           }, err => {
@@ -77,7 +80,7 @@ export class SessionData {
         let url: string;
         this.getSettings().then(() => {
           url = this.apiUrl + "/mails/" + this.currentContact.address;
-          this.http.get(url).subscribe((mails: any) => {
+          this.http.get(url, this.getOptions).subscribe((mails: any) => {
               this.listCurrentMails = mails;
               this.notifyModification.emit('downloadedAllCurrentMails');
             }, err => {
@@ -98,7 +101,7 @@ export class SessionData {
         let url: string;
         url = this.apiUrl + "/refresh";
         console.log(url);
-        this.http.get(url).subscribe(() => {
+        this.http.get(url, this.getOptions).subscribe(() => {
             this.getAllCurrentMails();
             this.notifyModification.emit('downloadedAllCurrentMails');
             this.getAllContacts();
@@ -134,7 +137,7 @@ export class SessionData {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/mails/attachments/" + mailId;
-        this.http.get(url).subscribe((pictures: any) => {
+        this.http.get(url, this.getOptions).subscribe((pictures: any) => {
             resolve(pictures);
           }, err => {
             // TODO gestion de l'erreur adéquate
