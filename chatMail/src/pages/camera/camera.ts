@@ -2,18 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions, CameraPreviewDimensions } from '@ionic-native/camera-preview';
-
-const cameraPreviewOpts: CameraPreviewOptions = {
-  x: 0,
-  y: 0,
-  width: window.screen.width,
-  height: window.screen.height,
-  camera: 'rear',
-  tapPhoto: true,
-  previewDrag: true,
-  toBack: true,
-  alpha: 1
-};
+import { SessionData } from '../../providers/session-data';
 
 @IonicPage()
 @Component({
@@ -22,41 +11,39 @@ const cameraPreviewOpts: CameraPreviewOptions = {
 })
 export class CameraPage {
 
-  picture: string;
-  backCamera: boolean;
-
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private cameraPreview: CameraPreview, public menu : MenuController){
-
-    this.backCamera = true;
-
+    private cameraPreview: CameraPreview, public menu : MenuController, public sessionData: SessionData){
 
   }
 
+  startCamera() {
+    this.cameraPreview.startCamera(
+      {
+        x: 0,
+        y: 0,
+        width: window.screen.width,
+        height: window.screen.height,
+        toBack: true,
+        previewDrag: false,
+        tapPhoto: false});
+    this.cameraPreview.show();
+  }
 
   takePicture(){
-    console.log("Photo prise...");
-    this.navCtrl.pop();
+    this.cameraPreview.takePicture({quality: 30}).then((imgData) => {
+        this.sessionData.currentMail.picture = imgData;
+        this.navCtrl.pop();
+      });
+
   }
 
   reverseCamera(){
-    console.log("Changement de l'appareil photo");
-
+    this.cameraPreview.switchCamera();
   }
 
   ionViewDidLoad(){
       this.menu.enable(false);
-      // start camera
-      this.cameraPreview.startCamera(
-        {
-          x: 0,
-          y: 0,
-          width: window.screen.width,
-          height: window.screen.height,
-          toBack: true,
-          previewDrag: false,
-          tapPhoto: true});
-      this.cameraPreview.show();
+      this.startCamera();
   }
 
   ionViewWillLeave(){

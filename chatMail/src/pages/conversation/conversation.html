@@ -42,7 +42,7 @@
   <div class="buttons-footer">
     <button ion-button icon-start (click)="openCamera()" class="button left green">
       <ion-icon name="camera"></ion-icon>
-      Ajouter une photo
+      {{ sessionData.currentMail.picture == undefined ? "Ajouter une photo" : "Remplacer la photo" }}
     </button>
 
     <button ion-button icon-start (click)="sendMail()" class="button right blue">
