@@ -20,33 +20,17 @@ export class SessionData {
       this.apiUrl = null;
 
       this.currentMail = {};
-      //this.getSettings();
+      this.getSettings();
   }
 
-  /*getSettings() {
-    return new Promise(resolve => {
-      this.http.get('assets/settings.json').subscribe((res : any) => {
-      this.token = res.token;
-      this.apiUrl = res.apiUrl
-      console.log(this.apiUrl);
-      resolve();
-      }, (err) => {
-        console.log(err);
+  getSettings() {
+    return new Promise((resolve, reject) => {
+      this.http.get('assets/settings.json').toPromise().then((res: any) => {
+        this.token = res.token;
+        this.apiUrl = res.apiUrl
+        console.log("resolve");
+        resolve();
       });
-    });
-  }*/
-
-  getUrl() {
-    return new Promise(resolve => {
-      //if (this.apiUrl != null){
-        console.log("pas null normalement " + this.apiUrl);
-        resolve("localhost:3000");
-      //}
-
-      /*this.getSettings().then(() => {
-        console.log(this.apiUrl);
-        resolve(this.apiUrl);
-      });*/
     });
   }
 
@@ -63,10 +47,9 @@ export class SessionData {
   getAllContacts(){
     console.log("Téléchargement de tous les contacts disponibles sur le serveur");
     return new Promise(resolve => {
-      this.getUrl().then((apiUrl: string) => {
+      this.getSettings().then(() => {
         let url: string;
-        url = apiUrl + "/contacts";
-        console.log(url);
+        url = this.apiUrl + "/contacts";
         this.http.get(url).subscribe( (contacts: any) => {
             this.listContacts = contacts;
             if(contacts.length > 0) this.setCurrentContact(contacts[0]);
@@ -74,7 +57,7 @@ export class SessionData {
             console.log(err);
           });
         });
-    });
+      });
   }
 
   setCurrentContact(contact){
@@ -91,12 +74,10 @@ export class SessionData {
   getAllCurrentMails(){
       console.log("Téléchargement de tous les mails de " + this.currentContact.address);
       return new Promise(resolve => {
-        this.getUrl().then(() => {
-          let url: string;
+        let url: string;
+        this.getSettings().then(() => {
           url = this.apiUrl + "/mails/" + this.currentContact.address;
-          console.log(url);
-          this.http.get(url)
-            .subscribe((mails: any) => {
+          this.http.get(url).subscribe((mails: any) => {
               this.listCurrentMails = mails;
               this.notifyModification.emit('downloadedAllCurrentMails');
             }, err => {
@@ -113,12 +94,11 @@ export class SessionData {
   refreshMails() {
     console.log("Synchronisation des mails sur le serveur");
     return new Promise(resolve => {
-      this.getUrl().then(() => {
+      this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/refresh";
         console.log(url);
-        this.http.get(url)
-          .subscribe(() => {
+        this.http.get(url).subscribe(() => {
             this.getAllCurrentMails();
             this.notifyModification.emit('downloadedAllCurrentMails');
             this.getAllContacts();
@@ -133,7 +113,7 @@ export class SessionData {
     console.log("Sending email");
     console.log("Contact : " + this.currentContact.address);
     return new Promise(resolve => {
-      this.getUrl().then(() => {
+      this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/mails";
         this.http.post(url, { address: this.currentContact.address, body: this.currentMail.body})
@@ -151,11 +131,10 @@ export class SessionData {
   downloadAllPictures(mailId: number) {
     console.log("DownloadtAllPictures for mailId: " + mailId);
     return new Promise(resolve => {
-      this.getUrl().then(() => {
+      this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/mails/attachments/" + mailId;
-        this.http.get(url)
-          .subscribe((pictures: any) => {
+        this.http.get(url).subscribe((pictures: any) => {
             resolve(pictures);
           }, err => {
             // TODO gestion de l'erreur adéquate
