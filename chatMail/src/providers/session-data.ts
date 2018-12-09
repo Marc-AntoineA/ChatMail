@@ -30,7 +30,7 @@ export class SessionData {
       this.http.get('assets/settings.json').toPromise().then((res: any) => {
         this.token = res.token;
         this.apiUrl = res.apiUrl
-        this.getOptions = { headers: { "Authorization": 'Token ' + this.token } };
+        this.getOptions = { headers: { 'Authorization': 'Token ' + this.token } };
         console.log("resolve");
         resolve();
       });

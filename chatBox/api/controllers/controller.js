@@ -8,7 +8,19 @@ var settings = require('../../settings.js');
 
 // TODO refactoring --> toutes les fonctions qui font appel aux 'modèles' passent dans les mappers
 
+var checkToken = function(req, res) {
+  let header = req.get('Authorization');
+  if (header == undefined)
+    return false;
+
+  if('Token ' + settings.DEFAULT_TOKEN != header) {
+    res.status(403);
+    res.send('Token invalid');
+  }
+}
+
 exports.getAttachmentsByMail = function(req, res) {
+  checkToken(req, res);
   AttachmentsMapper.listAttachmentsByMailId(req.params.mail).then(attachments => {
     res.json(attachments);
   })
@@ -18,6 +30,7 @@ exports.getAttachmentsByMail = function(req, res) {
 };
 
 exports.listAllContacts = function(req, res) {
+  checkToken(req, res);
   ContactsMapper.listAllContacts()
   .then(contacts => {
     var promises = [];
@@ -44,6 +57,7 @@ exports.listAllContacts = function(req, res) {
 };
 
 exports.createContact = function(req, res) {
+  checkToken(req, res);
   ContactsMapper.findOrCreate(req.body)
   .then(contact => {
     res.json(contact);
@@ -55,6 +69,7 @@ exports.createContact = function(req, res) {
 
 // TODO
 exports.listAllMails = function(req, res) {
+  checkToken(req, res);
   MailsMapper.listAllMails()
   .then(mails => {
     res.json(mails);
@@ -66,6 +81,7 @@ exports.listAllMails = function(req, res) {
 
 // TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
+  checkToken(req, res);
   MailsMapper.addNewMail(req.body.address, {
     body: req.body.body,
     subject: req.body.subject == undefined ? settings.DEFAULT_SUBJECT : req.body.subject,
@@ -84,6 +100,7 @@ exports.sendAnEmail = function(req, res) {
 };
 
 exports.listAllMailsByContact = function(req, res) {
+  checkToken(req, res);
   MailsMapper.listAllMailsByContact(req.params.address)
     .then(mails => {
       var promises = [];
@@ -106,26 +123,30 @@ exports.listAllMailsByContact = function(req, res) {
 
 // TODO
 exports.sendAMailByContact = function(req, res) {
-
+  checkToken(req, res);
 };
 
 // TODO
 exports.listNewEmails = function(req, res) {
+  checkToken(req, res);
   console.log("New emails from " + req.params.date);
 };
 
 // TODO
 exports.listNewMailsByContact = function(req, res) {
+  checkToken(req, res);
   console.log("New emails from " + req.params.address + " (" + req.params.date + ") " );
 };
 
 exports.refreshMails = function(req, res) {
+  checkToken(req, res);
   MailsMapper.getLastReceivedMail().then(date => {
     imapProvider.getAllMailsSince(date, res);
   });
 };
 
 exports.testAttachment = function(req, res) {
+  checkToken(req, res);
   AttachmentsMapper.addAttachmentWithMailId(req.body.mailId, req.body)
     .then(() => {
       res.json();
