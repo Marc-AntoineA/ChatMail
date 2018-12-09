@@ -15,7 +15,7 @@ var Mail = database.define('chat_mail', {
   },
   subject: Sequelize.STRING,
   body: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false
   },
   toMe: {

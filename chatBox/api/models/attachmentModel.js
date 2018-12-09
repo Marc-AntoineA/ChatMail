@@ -10,7 +10,7 @@ var Attachment = database.define("chat_attachments", {
     allowNull: false
   },
   data: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false
   },
   mail: {
