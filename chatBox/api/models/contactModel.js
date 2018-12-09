@@ -6,8 +6,7 @@ var database = require('../../settings').database;
 var Contact = database.define('chat_contacts', {
   address: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: false
   },
   name: {
     type: Sequelize.STRING,
