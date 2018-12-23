@@ -5,12 +5,13 @@
 
 
   <div class="preview">
-    <img [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + pictures[currentPictureIndex].data)" alt="Red dot" />
+    <img [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:'+ pictures[currentPictureIndex].contentType + ';base64,' + pictures[currentPictureIndex].data)"
+    alt="pictures[currentPictureIndex].filename" />
   </div>
 
   <div class="footer">
     <img *ngFor="let picture of pictures; let i = index"
-    [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:image/png;base64,' + picture.data)"
+    [src]="_DomSanitizationService.bypassSecurityTrustUrl('data:' + picture.contentType + ';base64,' + picture.data)"
     alt="{{ picture.filename }}"
     (click) = "changePicture(i)" />
   </div>
