@@ -16,7 +16,7 @@ exports.listAttachmentsByMailId = function (mailId) {
   return Attachment.findAll({where: {
     mail: mailId,
     contentType: {
-      [Op.in]: ['image/png']
+      [Op.in]: ['image/png', 'image/jpeg']
     }
   }});
 };

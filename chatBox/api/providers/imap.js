@@ -11,6 +11,7 @@ var fs = require('fs'), fileStream;
 var MailsMapper = require('../mappers/mailsMapper');
 var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var encoding = require('./encoding');
+var settings = require('../../settings');
 
 const simpleParser = require('mailparser').simpleParser;
 
@@ -32,7 +33,7 @@ function saveMailIntoDatabase(mail) {
 
   var newMail = {};
   var address  = encoding.fromQp(mail.from.value[0].address);
-  if (address == "addresse.de.test.785@gmail.com") return;
+  if (address == settings.myAddress) return;
 
   newMail.body = (mail.text != undefined) ? encoding.fromQp(mail.text) : '';
   newMail.subject = (mail.subject != undefined) ? encoding.fromQp(mail.subject) : '';
@@ -59,6 +60,7 @@ function saveMailIntoDatabase(mail) {
         newAttachment.data = attachment.content.toString('base64');
 
         AttachmentsMapper.addAttachmentWithMailId(mailId, newAttachment);
+        // TODO warning par mail si différent de png ou jpg
       }
     })
     .catch(err => {
