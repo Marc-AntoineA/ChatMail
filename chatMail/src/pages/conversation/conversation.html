@@ -3,13 +3,12 @@
 
     <div class="toolbar">
       <h3 *ngIf="sessionData.currentContact">
-        Messages de
         {{ sessionData.currentContact.forename }} {{ sessionData.currentContact.name }}
         {{ sessionData.currentContact.address }}
       </h3>
-      <button ion-button icon-start (click)="scrollToLastMail()" class="button right maroon 1-part">
+      <button ion-button icon-start (click)="scrollToLastMail()" class="button right maroon last-message-button">
         <ion-icon name="eye"></ion-icon>
-        Voir le dernier message échangé le {{ sessionData.getDateOfLastMail()|date:"dd/MM/yyyy 'à' HH:mm" }}
+        Voir message du {{ sessionData.getDateOfLastMail()|date:"dd/MM/yyyy 'à' HH:mm" }}
       </button>
     </div>
   </ion-navbar>
@@ -30,7 +29,7 @@
 </ion-content>
 
 <ion-footer class="conversation-footer">
-  <h4>Écrire ou continuer un message </h4>
+  <h4 class="footer-title" >Écrire ou continuer un message </h4>
   <!-- TODO le clic sur le bouton fait obligatoirement descendre tout en bas -->
 
   <textarea placeholder="Appuyer ici pour écrire un nouveau message"

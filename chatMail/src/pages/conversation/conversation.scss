@@ -5,6 +5,7 @@ page-conversation {
   font-size: 13px;
   font-family: Roboto;
 }
+
 .h3 {
   margin: 40px 0px;
 }
@@ -21,17 +22,24 @@ h4 {
 }
 
 .conversation-footer {
-  height: 198px!important;
+  height: 248px!important;
 }
 
 textarea {
   width: 98%;
   resize: none;
-  height: 95px;
+  height: 133px;
   border-width: 0;
   background-color: #efefef;
   padding: 5px;
   margin: 5px;
+  margin-bottom: 2px;
+}
+
+.footer-title {
+    font-size: 1.5rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.4rem;
 }
 
 .message-container {
@@ -39,11 +47,11 @@ textarea {
 }
 
 .message-container .fixed-content{
-  margin-bottom: 200px!important;
+  margin-bottom: 250px!important;
 }
 
 .message-container .scroll-content {
-  margin-bottom: 200px!important;
+  margin-bottom: 250px!important;
 }
 
 .message-content {
@@ -108,9 +116,14 @@ textarea {
   float: right;
 }
 
+.last-message-button {
+  width: 40%;
+}
+
 .button {
-  height: 40px;
-  font-size: 13px;
+  height: 50px;
+  font-size: 11px;
+  padding: 5px 55px;
 }
 
 .buttons-footer .button {
