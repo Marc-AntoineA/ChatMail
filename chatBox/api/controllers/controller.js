@@ -110,7 +110,6 @@ exports.listAllMails = function(req, res) {
 // TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
   if (!checkToken(req, res)) return;
-  if (req.body.attachment != undefined)
 
   MailsMapper.addNewMail(req.body.address, {
     body: req.body.body,
