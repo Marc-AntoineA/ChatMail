@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 
 var app = express();
-var port = process.env.PORT || 3300;
+var port = process.env.PORT || 3000;
 
 var logger = require('./logger').logger;
 

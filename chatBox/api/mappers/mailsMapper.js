@@ -99,40 +99,50 @@ exports.sendUntreatedMails = function () {
     level: 'info',
     message: 'sending untreated mails'
   });
-  Mail.findAll({
-    where: {
-      toMe: false,
-      treated: false
-    }})
-    .then(mails => {
-      for (var index = 0; index < mails.length; index++) {
-        var mail = mails[index];
-        ContactsMapper.getContactById(mail.recipient)
-        .then(contact => {
-          var newMail = {
-            to: contact.address,
-            from: settings.myAddress,
-            text: mail.body,
-            subject: mail.subject,
-            attachments: []
-          };
-          AttachmentsMapper.listAttachmentsByMailId(mail.id).then(list => {
-            if (list.length != 0) {
-                for (let k = 0; k < list.length; k++) {
-                  let attachment = list[k];
-                  newMail.attachments.push(attachment);
-                }
-            }
-            smtp.sendAnEmail(newMail)
-              .then(() => {
-                mail.updateAttributes({treated: true});
-              })
-              .catch( err => {
-                throw err;
-              });
+  return new Promise((resolve, reject) => {
+      Mail.findAll({
+      where: {
+        toMe: false,
+        treated: false
+      }})
+      .then(mails => {
+        let poolPromises = [];
+        for (var index = 0; index < mails.length; index++) {
+          var mail = mails[index];
+          ContactsMapper.getContactById(mail.recipient)
+          .then(contact => {
+            var newMail = {
+              to: contact.address,
+              from: settings.myAddress,
+              text: mail.body,
+              subject: mail.subject,
+              attachments: []
+            };
+
+            AttachmentsMapper.listAttachmentsByMailId(mail.id).then(list => {
+              if (list.length != 0) {
+                  for (let k = 0; k < list.length; k++) {
+                    let attachment = list[k];
+                    newMail.attachments.push(attachment);
+                  }
+              }
+
+              let sendMail = smtp.sendAnEmail(newMail).then(() => {
+                  mail.updateAttributes({treated: true});
+                }).catch( err => {
+                  reject();
+                });
+              pullPromises.add(sendMail);
+            });
           });
+        }
+        Promise.all(pullPromises).then(() => {
+          resolve();
+        }).catch(err => {
+          reject(err);
         });
-      }
+        
+    });
   });
 };
 
