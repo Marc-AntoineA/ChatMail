@@ -94,7 +94,6 @@ exports.createContact = function(req, res) {
 
 exports.listAllMails = function(req, res) {
   if (!checkToken(req, res)) return;
-  MailsMapper.sendUntreatedMails();
   MailsMapper.listAllMails()
   .then(mails => {
     res.json(mails);
