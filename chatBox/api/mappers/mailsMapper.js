@@ -99,8 +99,7 @@ exports.sendUntreatedMails = function () {
     level: 'info',
     message: 'sending untreated mails'
   });
-  return new Promise((resolve, reject) => {
-      Mail.findAll({
+  Mail.findAll({
       where: {
         toMe: false,
         treated: false
@@ -132,18 +131,16 @@ exports.sendUntreatedMails = function () {
                 }).catch( err => {
                   reject();
                 });
-              pullPromises.add(sendMail);
+              poolPromises.push(sendMail);
             });
           });
         }
-        Promise.all(pullPromises).then(() => {
+        Promise.all(poolPromises).then(() => {
           resolve();
         }).catch(err => {
           reject(err);
         });
-        
     });
-  });
 };
 
 exports.getDateOfLastMailWithContactId = function(contactId) {

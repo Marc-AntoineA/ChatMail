@@ -121,14 +121,12 @@ exports.sendAnEmail = function(req, res) {
   })
   .then(mailId => {
     if (req.body.attachment == undefined){
-      MailsMapper.sendUntreatedMails().then(() => {
-        res.json();
-      });
+      MailsMapper.sendUntreatedMails();
+      res.json();
     } else {
       AttachmentsMapper.addAttachmentWithMailId(mailId, req.body.attachment).then(() => {
-        MailsMapper.sendUntreatedMails().then(() => {
-          res.json();
-        });
+        MailsMapper.sendUntreatedMails();
+        res.json();
       });
     }
   })
