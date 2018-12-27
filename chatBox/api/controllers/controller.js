@@ -4,39 +4,56 @@ var MailsMapper = require('../mappers/mailsMapper');
 var ContactsMapper = require('../mappers/contactsMapper');
 var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var imapProvider  = require('../providers/imap');
-var settings = require('../../settings.js');
-
-// TODO refactoring --> toutes les fonctions qui font appel aux 'modèles' passent dans les mappers
+var settings = require('../../settings');
+var logger = require('../../logger').logger;
 
 var checkToken = function(req, res) {
   let header = req.get('Authorization');
-  if (header == undefined)
+  if (header == undefined){
+    res.status(403);
+    res.send('No token provided');
+    logger.log({
+      level: 'error',
+      message: 'no token provided for request: ' + req.originalUrl + ' with ip: ' + req.ip
+    });
     return false;
+  }
 
   if('Token ' + settings.DEFAULT_TOKEN != header) {
     res.status(403);
     res.send('Token invalid');
+    logger.log({
+      level: 'error',
+      message: 'token invalid used: ' + header
+    });
+    return false;
   }
+  return true;
 }
 
 exports.getAttachmentsByMail = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   AttachmentsMapper.listAttachmentsByMailId(req.params.mail).then(attachments => {
     res.json(attachments);
   })
   .catch(err => {
     res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Error in getAttachmentsByMailId for mailId: ' + req.params.mail + '(' + err + ')'
+    });
   });
 };
 
 exports.listAllContacts = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   ContactsMapper.listAllContacts()
   .then(contacts => {
     var promises = [];
     for (var index = 0; index < contacts.length; index++) {
       promises.push(MailsMapper.getDateOfLastMailWithContactId(contacts[index].id));
     }
+
     Promise.all(promises).then(values => {
       var newContacts = [];
       for (var index = 0; index < contacts.length; index++) {
@@ -53,35 +70,46 @@ exports.listAllContacts = function(req, res) {
   })
   .catch(err => {
     res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Error in listAllContacts: ' + err
+    });
   });
 };
 
 exports.createContact = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   ContactsMapper.findOrCreate(req.body)
   .then(contact => {
     res.json(contact);
   })
   .catch(err => {
     res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Error in createContact for contact ' + req.body.address + '(' + err + ')'
+    });
   });
 };
 
-// TODO
 exports.listAllMails = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   MailsMapper.listAllMails()
   .then(mails => {
     res.json(mails);
   })
   .catch(err => {
     res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Error in listAllMails'
+    });
   });
 };
 
 // TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   MailsMapper.addNewMail(req.body.address, {
     body: req.body.body,
     subject: req.body.subject == undefined ? settings.DEFAULT_SUBJECT : req.body.subject,
@@ -96,11 +124,15 @@ exports.sendAnEmail = function(req, res) {
   })
   .catch(err => {
     res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Error in listAllMails ' + err
+    })
   })
 };
 
 exports.listAllMailsByContact = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
   MailsMapper.listAllMailsByContact(req.params.address)
     .then(mails => {
       var promises = [];
@@ -118,40 +150,65 @@ exports.listAllMailsByContact = function(req, res) {
 
     }).catch(err => {
       res.send(err);
+      logger.log({
+        level: 'error',
+        message: 'In listAllMailsByContact for: ' + req.params.address + ' -- ' + err
+      });
     });
 };
 
 // TODO
 exports.sendAMailByContact = function(req, res) {
-  checkToken(req, res);
+  if (!checkToken(req, res)) return;
+  logger.log({
+    level: 'warn',
+    message: 'Appel à la fonction sendAMailByContact non définie pour le moment'
+  });
 };
 
 // TODO
 exports.listNewEmails = function(req, res) {
-  checkToken(req, res);
-  console.log("New emails from " + req.params.date);
+  if (!checkToken(req, res)) return;
+  logger.log({
+    level: 'warn',
+    message: 'Appel à la fonction listNewEmails non définie pour le moment'
+  });
 };
 
 // TODO
 exports.listNewMailsByContact = function(req, res) {
-  checkToken(req, res);
-  console.log("New emails from " + req.params.address + " (" + req.params.date + ") " );
-};
-
-exports.refreshMails = function(req, res) {
-  checkToken(req, res);
-  MailsMapper.getLastReceivedMail().then(date => {
-    imapProvider.getAllMailsSince(date, res);
+  if (!checkToken(req, res)) return;
+  logger.log({
+    level: 'warn',
+    message: 'Appel à la fonction listNewMailsByContact non définie pour le moment'
   });
 };
 
+exports.refreshMails = function(req, res) {
+  if (!checkToken(req, res)) return;
+  MailsMapper.getLastReceivedMail().then(date => {
+    imapProvider.getAllMailsSince(date, res);
+  }).catch(err => {
+    res.send(err);
+    logger.log({
+      level: 'error',
+      message: 'Erreur dans la fonction refreshMails / getLastRecevoidMail ou getAllMailSince : ' +  err
+    });
+  })
+};
+
 exports.testAttachment = function(req, res) {
-  checkToken(req, res);
+  logger.log({
+    level: 'warn',
+    message: 'La fonction testAttachment ne doit pas être utilisée'
+  });
+  if (!checkToken(req, res)) return;
   AttachmentsMapper.addAttachmentWithMailId(req.body.mailId, req.body)
     .then(() => {
       res.json();
     })
     .catch(err => {
       res.send(err);
-    })
+
+    });
 };

@@ -3,8 +3,9 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 
 var app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3300;
 
+var logger = require('./logger').logger;
 
 app.all('*', function(req, res, next) {
      var origin = req.get('origin');
@@ -22,4 +23,7 @@ var routes = require('./api/routes/routes');
 routes(app);
 
 app.listen(port);
-console.log("ChatBox écoute désormais sur le port : " + port)
+logger.log({
+  level: 'info',
+  message: 'ChatBox écoute désormais sur le port : ' + port
+});

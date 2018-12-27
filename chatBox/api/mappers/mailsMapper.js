@@ -5,6 +5,7 @@ var Contact = require('../models/contactModel').Contact;
 var ContactsMapper = require('../mappers/contactsMapper');
 var smtp = require('../providers/smtp');
 var settings = require('../../settings');
+var logger = require('../../logger').logger;
 
 // Obtenir tous les mails d'une personne
 exports.listAllMailsByContact = function(contactAddress) {
@@ -48,7 +49,6 @@ exports.getMailById = function(id) {
 // Mail = object js avec les bonnes structures
 // Warning. si déjà créé, renvoie true
 exports.addNewMail = function (contactAddress, mail){
-
   return new Promise((resolve, reject) => {
     ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
         var contact = results[0];
@@ -94,7 +94,10 @@ exports.getLastReceivedMail = function () {
 };
 
 exports.sendUntreatedMails = function () {
-  console.log("Sending untreated mails");
+  logger.log({
+    level: 'info',
+    message: 'sending untreated mails'
+  });
   Mail.findAll({
     where: {
       toMe: false,
@@ -124,6 +127,5 @@ exports.sendUntreatedMails = function () {
 };
 
 exports.getDateOfLastMailWithContactId = function(contactId) {
-    console.log(contactId);
     return Mail.max('date', { where: {recipient: contactId}});
 };
