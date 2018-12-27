@@ -112,15 +112,24 @@ exports.sendUntreatedMails = function () {
             to: contact.address,
             from: settings.myAddress,
             text: mail.body,
-            subject: mail.subject
+            subject: mail.subject,
+            attachments: []
           };
-          smtp.sendAnEmail(newMail)
-            .then(() => {
-              mail.updateAttributes({treated: true});
-            })
-            .catch( err => {
-              throw err;
-            });
+          AttachmentsMapper.listAttachmentsByMailId(mail.id).then(list => {
+            if (list.length != 0) {
+                for (let k = 0; k < list.length; k++) {
+                  let attachment = list[k];
+                  newMail.attachments.push(attachment);
+                }
+            }
+            smtp.sendAnEmail(newMail)
+              .then(() => {
+                mail.updateAttributes({treated: true});
+              })
+              .catch( err => {
+                throw err;
+              });
+          });
         });
       }
   });

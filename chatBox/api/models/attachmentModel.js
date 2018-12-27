@@ -35,4 +35,8 @@ var Attachment = database.define("chat_attachments", {
   }
 });
 
+exports.getUrl = function(attachment) {
+  return 'data:' + attachment.contentType + ';base64,' + attachment.data;
+}
+
 exports.Attachment = Attachment;

@@ -6,7 +6,6 @@
 
 var smtp = require('../../settings').smtp;
 
-
 exports.sendAnEmail = function(mail) {
   return smtp.sendMail(mail);
 };

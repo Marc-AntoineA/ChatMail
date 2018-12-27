@@ -110,6 +110,8 @@ exports.listAllMails = function(req, res) {
 // TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
   if (!checkToken(req, res)) return;
+  if (req.body.attachment != undefined)
+
   MailsMapper.addNewMail(req.body.address, {
     body: req.body.body,
     subject: req.body.subject == undefined ? settings.DEFAULT_SUBJECT : req.body.subject,
@@ -117,10 +119,18 @@ exports.sendAnEmail = function(req, res) {
     treated: false,
     date: new Date()
   })
-  .then(() => {
-    MailsMapper.sendUntreatedMails().then(() => {
-      res.json();
-    })
+  .then(mailId => {
+    if (req.body.attachment != undefined){
+      MailsMapper.sendUntreatedMails().then(() => {
+        res.json();
+      });
+    } else {
+      AttachmentsMapper.addAttachmentWithMailId(mailId, req.body.attachment).then(() => {
+        MailsMapper.sendUntreatedMails().then(() => {
+          res.json();
+        });
+      });
+    }
   })
   .catch(err => {
     res.send(err);
