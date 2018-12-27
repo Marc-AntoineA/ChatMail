@@ -109,11 +109,11 @@ exports.sendUntreatedMails = function () {
         treated: false
       }})
       .then(mails => {
-        for (var index = 0; index < mails.length; index++) {
-          var mail = mails[index];
+        for (let index = 0; index < mails.length; index++) {
+          let mail = mails[index];
           ContactsMapper.getContactById(mail.recipient)
           .then(contact => {
-            var newMail = {
+            let newMail = {
               to: contact.address,
               from: settings.myAddress,
               text: mail.body,
@@ -129,7 +129,7 @@ exports.sendUntreatedMails = function () {
                   }
               }
 
-              let sendMail = smtp.sendAnEmail(newMail).then(() => {
+              smtp.sendAnEmail(newMail).then(() => {
                   mail.updateAttributes({treated: true});
                 }).catch( err => {
                   throw err;
