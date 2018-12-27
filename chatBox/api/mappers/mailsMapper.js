@@ -94,6 +94,10 @@ exports.getLastReceivedMail = function () {
   });
 };
 
+var getUri = function(attachment) {
+  return 'data:' + attachment.contentType + ';base64,' + attachment.data;
+}
+
 exports.sendUntreatedMails = function () {
   logger.log({
     level: 'info',
@@ -105,7 +109,6 @@ exports.sendUntreatedMails = function () {
         treated: false
       }})
       .then(mails => {
-        let poolPromises = [];
         for (var index = 0; index < mails.length; index++) {
           var mail = mails[index];
           ContactsMapper.getContactById(mail.recipient)
@@ -122,24 +125,18 @@ exports.sendUntreatedMails = function () {
               if (list.length != 0) {
                   for (let k = 0; k < list.length; k++) {
                     let attachment = list[k];
-                    newMail.attachments.push(attachment);
+                    newMail.attachments.push(getUri(attachment));
                   }
               }
 
               let sendMail = smtp.sendAnEmail(newMail).then(() => {
                   mail.updateAttributes({treated: true});
                 }).catch( err => {
-                  reject();
+                  throw err;
                 });
-              poolPromises.push(sendMail);
             });
           });
         }
-        Promise.all(poolPromises).then(() => {
-          resolve();
-        }).catch(err => {
-          reject(err);
-        });
     });
 };
 
