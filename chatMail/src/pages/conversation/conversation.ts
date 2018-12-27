@@ -72,6 +72,7 @@ export class ConversationPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ConversationPage');
+    this.sessionData.saveCurrentMail();
   }
 
   openGalery(message: any) {

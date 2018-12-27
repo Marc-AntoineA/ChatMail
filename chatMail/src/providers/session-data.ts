@@ -64,14 +64,38 @@ export class SessionData {
   }
 
   setCurrentContact(contact){
-      this.currentContact = contact;
-      this.listCurrentMails = null;
-      this.resetCurrentMail();
-      this.getAllCurrentMails();
+      this.saveCurrentMail().then(() => {
+        this.currentContact = contact;
+        this.listCurrentMails = null;
+        this.loadCurrentMail();
+        this.getAllCurrentMails();
+      });
+  }
+
+  loadCurrentMail() {
+    console.log("resetCurrentMail for contact : " + this.currentContact.address);
+    let key = 'currentMail-' + this.currentContact.address;
+    this.storage.get(key).then((val) =>{
+      if (val != undefined){
+          this.currentMail = val;
+      } else {
+        this.resetCurrentMail();
+      }
+    });
   }
 
   resetCurrentMail() {
     this.currentMail = {body: "", picture: ""};
+  }
+
+  saveCurrentMail() {
+    return new Promise(resolve => {
+        if (this.currentMail == null) resolve();
+        if (this.currentContact == null) resolve();
+        let key = 'currentMail-' + this.currentContact.address;
+        this.storage.set(key, this.currentMail);
+        resolve();
+      });
   }
 
   getAllCurrentMails(){
