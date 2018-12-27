@@ -125,7 +125,7 @@ exports.sendUntreatedMails = function () {
               if (list.length != 0) {
                   for (let k = 0; k < list.length; k++) {
                     let attachment = list[k];
-                    newMail.attachments.push(getUri(attachment));
+                    newMail.attachments.push({path: getUri(attachment)});
                   }
               }
 
