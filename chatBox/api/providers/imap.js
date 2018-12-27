@@ -56,7 +56,9 @@ function saveMailIntoDatabase(mail) {
 
         if (attachment.filename != undefined)
           newAttachment.fileName  = attachment.filename;
-
+        else
+          newAttachment.fileName = '(emptyFile)';
+          
         newAttachment.data = attachment.content.toString('base64');
 
         AttachmentsMapper.addAttachmentWithMailId(mailId, newAttachment);

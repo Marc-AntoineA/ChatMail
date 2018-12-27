@@ -23,7 +23,7 @@ var Attachment = database.define("chat_attachments", {
   },
   size: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   fileName: {
     type: Sequelize.STRING,
@@ -31,7 +31,7 @@ var Attachment = database.define("chat_attachments", {
   },
   checkSum: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   }
 });
 

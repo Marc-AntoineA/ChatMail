@@ -3,6 +3,7 @@
 var Mail = require('../models/mailModel').Mail;
 var Contact = require('../models/contactModel').Contact;
 var ContactsMapper = require('../mappers/contactsMapper');
+var AttachmentsMapper = require('../mappers/attachmentsMapper');
 var smtp = require('../providers/smtp');
 var settings = require('../../settings');
 var logger = require('../../logger').logger;

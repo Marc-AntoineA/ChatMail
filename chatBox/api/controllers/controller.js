@@ -120,7 +120,7 @@ exports.sendAnEmail = function(req, res) {
     date: new Date()
   })
   .then(mailId => {
-    if (req.body.attachment != undefined){
+    if (req.body.attachment == undefined){
       MailsMapper.sendUntreatedMails().then(() => {
         res.json();
       });
@@ -136,7 +136,7 @@ exports.sendAnEmail = function(req, res) {
     res.send(err);
     logger.log({
       level: 'error',
-      message: 'Error in listAllMails ' + err
+      message: 'Error in send a mail ' + err
     })
   })
 };
