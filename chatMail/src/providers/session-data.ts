@@ -55,6 +55,7 @@ export class SessionData {
         url = this.apiUrl + "/contacts";
         this.http.get(url, this.getOptions).subscribe( (contacts: any) => {
             this.listContacts = contacts;
+            this.listContacts = this.listContacts.sort((a, b) => a.date <= b.date);
             if(contacts.length > 0) this.setCurrentContact(contacts[0]);
           }, err => {
             console.log(err);
@@ -136,6 +137,7 @@ export class SessionData {
     });
   }
 
+  // TODO contentType = jpeg ou png?
   sendCurrentMail() {
     console.log("Sending email");
     console.log("Contact : " + this.currentContact.address);
@@ -143,7 +145,18 @@ export class SessionData {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/mails";
-        this.http.post(url, { address: this.currentContact.address, body: this.currentMail.body})
+        let mail = {
+          address: this.currentContact.address,
+          body: this.currentMail.body,
+          attachment: undefined
+        };
+        if (this.currentMail.picture != undefined && this.currentMail.picture != "")
+          mail.attachment = {
+            contentType: 'image/jpeg',
+            data: this.currentMail.picture,
+            fileName: 'chatBoxPhoto.jpg'
+          }
+        this.http.post(url, mail, this.getOptions)
           .subscribe(() => {
             this.getAllCurrentMails();
             this.resetCurrentMail();

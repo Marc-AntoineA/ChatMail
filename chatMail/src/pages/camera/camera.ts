@@ -31,7 +31,7 @@ export class CameraPage {
 
   takePicture(){
     this.cameraPreview.takePicture({quality: 30}).then((imgData) => {
-        this.sessionData.currentMail.picture = imgData;
+        this.sessionData.currentMail.picture = imgData[0];
         this.navCtrl.pop();
       });
 
