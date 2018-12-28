@@ -56,8 +56,8 @@ exports.listAllContacts = function(req, res) {
     }
 
     Promise.all(promises).then(values => {
-      var newContacts = [];
-      for (var index = 0; index < contacts.length; index++) {
+      let newContacts = [];
+      for (let index = 0; index < contacts.length; index++) {
         newContacts.push({
           address: contacts[index].address,
           forename: contacts[index].forename,
@@ -65,11 +65,19 @@ exports.listAllContacts = function(req, res) {
           date: values[index]
         });
       }
-      console.log("-------------------------------------");
-      console.log(newContacts);
-      newContacts.sort((a, b) => {
-        return new Date(a.date) <= new Date(b.date);
-      });
+
+      for (let i = 0; i < contacts.length; i++){
+        let maxIndex = i;
+        for (let j = i + 1; j < contacts.length; j++){
+          if (new Date(newContacts[j].date) >= new Date(newContacts[maxIndex])){
+            maxIndex = j;
+          }
+        }
+        let tmp = newContacts[i];
+        newContacts[i] = newContacts[maxIndex];
+        newContacts[maxIndex] = newContacts[i];
+      }
+
       console.log("=====================================");
       console.log(newContacts);
       res.json(newContacts);
