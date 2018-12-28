@@ -8,6 +8,7 @@ var settings = require('../../settings');
 var logger = require('../../logger').logger;
 
 var checkToken = function(req, res) {
+  return true;
   let header = req.get('Authorization');
   if (header == undefined){
     res.status(403);
@@ -64,7 +65,13 @@ exports.listAllContacts = function(req, res) {
           date: values[index]
         });
       }
-      newContacts.sort(function(a, b){ return a.date <= b.date;});
+      console.log("-------------------------------------");
+      console.log(newContacts);
+      newContacts.sort((a, b) => {
+        return new Date(a.date) <= new Date(b.date);
+      });
+      console.log("=====================================");
+      console.log(newContacts);
       res.json(newContacts);
     });
   })
@@ -126,6 +133,11 @@ exports.sendAnEmail = function(req, res) {
       AttachmentsMapper.addAttachmentWithMailId(mailId, req.body.attachment).then(() => {
         MailsMapper.sendUntreatedMails();
         res.json();
+      }).catch(err => {
+        logger.log({
+          level: 'error',
+          message: 'Error while adding attachment with mailId (enough place?)'
+        });
       });
     }
   })
@@ -216,6 +228,9 @@ exports.testAttachment = function(req, res) {
     })
     .catch(err => {
       res.send(err);
-
+      logger.log({
+        level: 'error',
+        message: 'Error while adding attachment with mailId (enough place?)'
+      });
     });
 };
