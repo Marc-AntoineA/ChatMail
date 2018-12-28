@@ -69,13 +69,13 @@ exports.listAllContacts = function(req, res) {
       for (let i = 0; i < contacts.length; i++){
         let maxIndex = i;
         for (let j = i + 1; j < contacts.length; j++){
-          if (new Date(newContacts[j].date) >= new Date(newContacts[maxIndex])){
+          if (new Date(newContacts[j].date) >= new Date(newContacts[maxIndex].date)){
             maxIndex = j;
           }
         }
         let tmp = newContacts[i];
         newContacts[i] = newContacts[maxIndex];
-        newContacts[maxIndex] = newContacts[i];
+        newContacts[maxIndex] = tmp;
       }
 
       console.log("=====================================");
