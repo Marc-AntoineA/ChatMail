@@ -8,7 +8,7 @@ var settings = require('../../settings');
 var logger = require('../../logger').logger;
 
 var checkToken = function(req, res) {
-  return true;
+  //return true;
   let header = req.get('Authorization');
   if (header == undefined){
     res.status(403);
@@ -107,21 +107,6 @@ exports.createContact = function(req, res) {
   });
 };
 
-exports.listAllMails = function(req, res) {
-  if (!checkToken(req, res)) return;
-  MailsMapper.listAllMails()
-  .then(mails => {
-    res.json(mails);
-  })
-  .catch(err => {
-    res.send(err);
-    logger.log({
-      level: 'error',
-      message: 'Error in listAllMails'
-    });
-  });
-};
-
 // TODO gérer les PJ
 exports.sendAnEmail = function(req, res) {
   if (!checkToken(req, res)) return;
@@ -158,10 +143,11 @@ exports.sendAnEmail = function(req, res) {
   })
 };
 
-exports.listAllMailsByContact = function(req, res) {
+exports.listLastsMailsByContact = function(req, res) {
   if (!checkToken(req, res)) return;
   MailsMapper.listAllMailsByContact(req.params.address)
     .then(mails => {
+      mails = mails.slice(-settings.NB_LASTS_MAILS);
       var promises = [];
       for (var i = 0; i < mails.length; i++)
         promises.push(AttachmentsMapper.listAttachmentsByMailId(mails[i].id));

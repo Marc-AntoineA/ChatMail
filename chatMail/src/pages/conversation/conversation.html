@@ -44,9 +44,10 @@
       {{ sessionData.currentMail.picture == undefined || sessionData.currentMail.picture == "" ? "Ajouter une photo" : "Remplacer la photo" }}
     </button>
 
-    <button ion-button icon-start (click)="sendMail()" class="button right blue">
+    <button ion-button icon-start (click)="sendMail()" class="button right blue"
+    [disabled] = "sessionData.currentMail.picture == '' && sessionData.currentMail.body == ''">
       <ion-icon name="send"></ion-icon>
-      Envoyer le courier
+      {{ sessionData.currentMail.picture == "" && sessionData.currentMail.body == "" ? "Message vide" : "Envoyer le courier" }}
     </button>
   </div>
 
