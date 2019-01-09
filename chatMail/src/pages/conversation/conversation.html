@@ -20,7 +20,7 @@
       <span *ngIf="message.numberAttachments  > 0" class="message-pictures green" (click)="openGalery(message)">{{ message.numberAttachments }} photo(s) disponibles</span>
       {{ message.toMe ? 'Reçu': 'Envoyé'}} le {{ message.date|date:"dd/MM/yyyy 'à' HH:mm" }} - <span>{{ message.subject == null || message.subject == '' ? "(Pas d'objet)" : message.subject }}</span>
     </div>
-    <div *ngIf="message.body != ''" class="message-content">{{ trim(message.body) }}</div>
+    <div *ngIf="message.body != ''" class="message-content" [innerHTML]="trim(message.body)"></div>
     <div *ngIf="message.body == ''" class="message-content">(Courrier vide)</div>
     <!-- images -->
 
