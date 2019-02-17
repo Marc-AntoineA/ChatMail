@@ -7,7 +7,7 @@ module.exports = function(app) {
     .get(chatApi.listAllContacts)
     .post(chatApi.createContact);
 
-  app.route('mails/')
+  app.route('/mails')
     .post(chatApi.sendAnEmail);
 
   app.route('/mails/:address')
