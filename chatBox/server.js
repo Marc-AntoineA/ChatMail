@@ -5,7 +5,10 @@ var cors = require('cors');
 var app = express();
 var port = process.env.PORT || 3000;
 
-var logger = require('./logger').logger;
+const logger = require('./logger').logger;
+
+const smtp = require('./api/providers/smtp');
+const settings = require('./settings');
 
 app.all('*', function(req, res, next) {
      var origin = req.get('origin');
@@ -27,3 +30,20 @@ logger.log({
   level: 'info',
   message: 'ChatBox écoute désormais sur le port : ' + port
 });
+
+function exitHandler() {
+  console.log("EXIT");
+  const errorMail = {
+    to: settings.ERROR_MAIL_ADDRESS,
+    from: settings.myAddress,
+    text: 'Error',
+    subject: 'A new error in the app',
+    attachments: []
+  };
+
+  smtp.sendAnEmail(errorMail)
+    .then(() => { console.log('email sent'); process.exit();})
+    .catch(() => {console.log('mail failed'); process.exit();});
+}
+
+process.on('exit', exitHandler.bind());

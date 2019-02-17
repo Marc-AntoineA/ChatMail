@@ -1,11 +1,26 @@
 'use strict';
 
-var MailsMapper = require('../mappers/mailsMapper');
-var ContactsMapper = require('../mappers/contactsMapper');
-var AttachmentsMapper = require('../mappers/attachmentsMapper');
-var imapProvider  = require('../providers/imap');
-var settings = require('../../settings');
-var logger = require('../../logger').logger;
+const MailsMapper = require('../mappers/mailsMapper');
+const ContactsMapper = require('../mappers/contactsMapper');
+const AttachmentsMapper = require('../mappers/attachmentsMapper');
+const imapProvider  = require('../providers/imap');
+const settings = require('../../settings');
+const logger = require('../../logger').logger;
+const smtp = require('../providers/smtp');
+
+var testErrorMail = function() {
+  const errorMail = {
+    to: settings.ERROR_MAIL_ADDRESS,
+    from: settings.myAddress,
+    text: 'Error',
+    subject: 'A new error in the app',
+    attachments: []
+  };
+
+  smtp.sendAnEmail(errorMail)
+    .then(() => { console.log('email sent'); })
+    .catch(() => { console.log('mail failed'); });
+}
 
 var checkToken = function(req, res) {
   //return true;
