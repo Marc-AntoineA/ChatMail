@@ -39,15 +39,15 @@ export class ConversationPage {
   }
 
   trim(str: string) {
-    console.log(str);
+    //console.log(str);
     str = str.replace("\t", "&nbsp&nbsp&nbsp&nbsp")
     str = str.replace(/\n/g, "<br/>")
     while (str.includes("<br/><br/>")) {
-      //str = str.replace(/<br\/><br\/>/g, "<br/>");
+      str = str.replace(/<br\/> <br\/>/g, "<br/>");
       str = str.replace(/<br\/><br\/>/g, "<br/>");
     }
-    str = str.replace("&nbsp;<br>","")
-    console.log(str.trim());
+    str = str.replace(/&nbsp;<br>/g,"")
+    //console.log(str.trim());
     return str.trim();
   }
 
