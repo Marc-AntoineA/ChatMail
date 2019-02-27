@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController, AlertController } from 'ionic-angular';
 
 import { SessionData } from "../../providers/session-data";
 import { ConversationPage } from '../conversation/conversation';
@@ -12,12 +12,33 @@ import * as moment from 'moment';
 })
 export class HomePage {
 
-  messengerPage: any = ConversationPage;
+  messengerPage: any = ConversationPage
+  constructor(public navCtrl: NavController, public sessionData: SessionData,
+     public loadingCtrl: LoadingController, public alertCtrl: AlertController) {
+    this.refreshMails();
+  }
 
-  constructor(public navCtrl: NavController, public sessionData: SessionData) {
 
-      this.sessionData.getAllContacts();
+  showErrorMessage(internetWorks: bool) {
+    const message = internetWorks ?
+      'Veuillez informer le gestionnaire de l\'application de cette erreur.'
+      : 'L\'appareil ne semble pas avoir accès à internet, veuillez réessayer ultérieurement';
 
+    const alert = this.alertCtrl.create({
+      title: 'Oups, quelque chose semble cassé',
+      message: message,
+      cssClass: 'validation-alert',
+      buttons: [
+        {
+          text: 'Réessayer',
+          cssClass: 'green validation-button right',
+          handler: () => {
+            this.refreshMails();
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   openConversation(contact){
@@ -25,7 +46,26 @@ export class HomePage {
   }
 
   refreshMails() {
-    this.sessionData.refreshMails();
+    const loader = this.loadingCtrl.create({
+     content: "Chargement en cours..."
+    });
+    loader.present();
+
+    this.sessionData.refreshMails()
+      .then(() => {
+        loader.dismiss();
+      })
+      .catch((error) => {
+        this.sessionData.testInternetConnection()
+          .then(() => {
+            loader.dismiss();
+            this.showErrorMessage(true);
+          })
+          .catch(() => {
+            loader.dismiss();
+            this.showErrorMessage(false)
+          });
+      });
   }
 
   isToday(date) {

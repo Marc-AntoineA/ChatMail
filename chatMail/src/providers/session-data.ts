@@ -31,7 +31,6 @@ export class SessionData {
         this.token = res.token;
         this.apiUrl = res.apiUrl
         this.getOptions = { headers: { 'Authorization': 'Token ' + this.token } };
-        console.log("resolve");
         resolve();
       });
     });
@@ -49,16 +48,17 @@ export class SessionData {
 
   getAllContacts(){
     console.log("Téléchargement de tous les contacts disponibles sur le serveur");
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/contacts";
-        this.http.get(url, this.getOptions).subscribe( (contacts: any) => {
+        this.http.get(url, this.getOptions).subscribe((contacts: any) => {
             this.listContacts = contacts;
             this.listContacts = this.listContacts.sort((a, b) => a.date <= b.date);
             if(contacts.length > 0) this.setCurrentContact(contacts[0]);
+            resolve();
           }, err => {
-            console.log(err);
+            reject(err);
           });
         });
       });
@@ -120,18 +120,23 @@ export class SessionData {
   }
 
   refreshMails() {
-    console.log("Synchronisation des mails sur le serveur");
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/refresh";
-        console.log(url);
         this.http.get(url, this.getOptions).subscribe(() => {
-            this.getAllCurrentMails();
-            this.notifyModification.emit('downloadedAllCurrentMails');
-            this.getAllContacts();
+
+            this.getAllContacts()
+              .then(() => {
+                this.getAllCurrentMails();
+                this.notifyModification.emit('downloadedAllCurrentMails');
+                resolve()
+              })
+              .catch((err) => {
+                reject(err)
+              });
           }, err => {
-            // TODO
+            reject(err);
           });
         });
     });
@@ -141,7 +146,7 @@ export class SessionData {
   sendCurrentMail() {
     console.log("Sending email");
     console.log("Contact : " + this.currentContact.address);
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.getSettings().then(() => {
         let url: string;
         url = this.apiUrl + "/mails";
@@ -160,8 +165,9 @@ export class SessionData {
           .subscribe(() => {
             this.getAllCurrentMails();
             this.resetCurrentMail();
+            resolve();
           }, err => {
-
+            reject(err);
           });
         });
     });
@@ -199,4 +205,13 @@ export class SessionData {
     });
   }
 
+  testInternetConnection() {
+    return new Promise((resolve, reject) => {
+      this.http.get('https://api.github.com').subscribe(() => {
+        resolve();
+      }, (err) => {
+        reject(err);
+      });
+    });
+  }
 }
