@@ -18,7 +18,6 @@ export class HomePage {
     this.refreshMails();
   }
 
-
   showErrorMessage(internetWorks: bool) {
     const message = internetWorks ?
       'Veuillez informer le gestionnaire de l\'application de cette erreur.'
@@ -31,7 +30,7 @@ export class HomePage {
       buttons: [
         {
           text: 'Réessayer',
-          cssClass: 'green validation-button right',
+          cssClass: 'green validation-button center',
           handler: () => {
             this.refreshMails();
           }
