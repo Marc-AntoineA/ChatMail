@@ -18,7 +18,7 @@ export class HomePage {
     this.refreshMails();
   }
 
-  showErrorMessage(internetWorks: bool) {
+  showErrorMessage(internetWorks: boolean) {
     const message = internetWorks ?
       'Veuillez informer le gestionnaire de l\'application de cette erreur.'
       : 'L\'appareil ne semble pas avoir accès à internet, veuillez réessayer ultérieurement';
