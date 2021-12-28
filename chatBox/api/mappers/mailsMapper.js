@@ -51,6 +51,16 @@ exports.getMailById = function(id) {
 // Warning. si déjà créé, renvoie true
 exports.addNewMail = function (contactAddress, mail){
   return new Promise((resolve, reject) => {
+    if (contactAddress === "no-reply@youtube.com"
+      || contactAddress === "noreply-utos@google.com"
+      || contactAddress === "no-reply@dropbox.com"
+      || contactAddress === "no-reply@accounts.google.com"
+      || contactAddress === "googleaccount-noreply@google.com"
+      || contactAddress === "noreply@google.com") {
+      reject();
+      return;
+    }
+    
     ContactsMapper.findOrCreate({address: contactAddress}).then(results => {
         var contact = results[0];
         mail.recipient = contact.id;

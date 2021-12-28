@@ -26,7 +26,7 @@ export class SessionData {
   }
 
   getSettings() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.http.get('assets/settings.json').toPromise().then((res: any) => {
         this.token = res.token;
         this.apiUrl = res.apiUrl
