@@ -6,8 +6,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SessionData } from '../providers/session-data';
 
 import { HomePage } from '../pages/home/home';
-// TMP
-import { CameraPage } from '../pages/camera/camera';
 
 @Component({
   templateUrl: 'app.html',

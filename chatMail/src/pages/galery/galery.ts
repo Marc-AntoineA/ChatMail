@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Content, MenuController } from 'ionic-angular';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CameraPage } from '../../pages/camera/camera';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 
 import { SessionData } from '../../providers/session-data';
 
@@ -19,8 +17,7 @@ export class GaleryPage {
   currentPictureIndex: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-      public sessionData: SessionData, private alertCtrl: AlertController, public menu : MenuController,
-      private _DomSanitizationService: DomSanitizer) {
+      public sessionData: SessionData, public menu : MenuController) {
 
       this.pictures = [];
       this.currentPictureIndex = -1;
